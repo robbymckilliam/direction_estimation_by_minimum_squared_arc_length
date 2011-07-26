@@ -10,3 +10,9 @@ mpost -interaction=nonstopmode directionestplot.mp
 mpost -interaction=nonstopmode delayestplot.mp
 mpost -interaction=nonstopmode sumdistplot.mp
 cd ..
+
+latex papersm.tex
+bibtex papersm
+latex papersm.tex
+latex papersm.tex
+ps2pdf papersm.tex
