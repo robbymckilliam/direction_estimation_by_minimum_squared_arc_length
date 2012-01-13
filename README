@@ -10,5 +10,5 @@ will build the pdf using this data.  The pdf is called papersm.pdf.  If you want
 
 sh runsimulationsandbuildpdf.sh
 
-Depending on your machine this might take a while.  Probably a day or so.  Open up the bash script and work backwards to get at code.
+You need a working java jvm and also Scala 2.8 or higher installed.  Depending on your machine this might take a while.  Open up the bash script and work backwards to get at the code.
 

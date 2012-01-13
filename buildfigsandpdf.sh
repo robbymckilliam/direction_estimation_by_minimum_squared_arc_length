@@ -15,4 +15,5 @@ latex papersm.tex
 bibtex papersm
 latex papersm.tex
 latex papersm.tex
-ps2pdf papersm.tex
+dvips papersm.dvi
+ps2pdf papersm.ps
