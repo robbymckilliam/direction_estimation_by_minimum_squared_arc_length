@@ -1,7 +1,7 @@
 %\documentclass[draftcls, onecolumn, 11pt]{../bib/IEEEtran}
-\documentclass[journal]{IEEEtran}
+\documentclass[journal]{../bib/IEEEtran}
 
-\usepackage{mathbf-abbrevs}
+\usepackage{../bib/mathbf-abbrevs}
 
 \input{defs}
 
@@ -10,10 +10,7 @@
 \title{Direction estimation by minimum squared arc length}
 
 \author{Robby~G.~McKilliam, Barry G. Quinn and I. Vaughan L. Clarkson%
-  \thanks{A preliminary version of some of this material is contained in Chapters 5 and 6 of Robby McKilliam's PhD thesis \cite{McKilliam2010thesis}. Robby~McKilliam is with the Institute for Telecommunications Research, The University of South Australia, SA, 5095. Vaughan~Clarkson is with the School of
-     Information Technology \& Electrical Engineering, The University
-     of Queensland, QLD., 4072, Australia. Barry~Quinn is with the Department of Statistics, Macquarie
-     University, Sydney, NSW, 2109, Australia}
+  \thanks{A preliminary version of some of this material is contained in Chapters 5 and 6 of Robby McKilliam's PhD thesis \cite{McKilliam2010thesis}. Robby~McKilliam is with the Institute for Telecommunications Research, The University of South Australia, SA, 5095.  Barry~Quinn is with the Department of Statistics, Macquarie University, Sydney, NSW, 2109, Australia.   Vaughan~Clarkson is with the School of Information Technology \& Electrical Engineering, The University of Queensland, QLD., 4072, Australia.}
      }
 % The paper headers 
 \markboth{Direction estimation by minimum squared arc length}{DRAFT \today}
@@ -23,31 +20,43 @@
 
  
 \begin{abstract}
-Circular statistics has found substantial application in science and engineering. One of the fundamental problems in circular statistics is that of estimating the \emph{mean direction} of a circular random variable from a number of observations. The standard approach in the literature is called the \emph{sample circular mean} and its asymptotic properties are well known. It can also be computed efficiently in a number of arithmetic operations that is linear in the number of observations. In this paper we consider an alternative estimator called the \emph{angular least squares estimator} that is based on minimising squared arc length. We show how this estimator can be computed efficiently in a linear number of operations using an algorithm from algebraic number theory and we derive its asymptotic properties. We show both theoretically and by simulation that in some scenarios the angular least squares estimator is statistically more accurate than the sample circular mean. As such the results in this paper potentially have implications for the wide variety of fields in science, engineering and statistics that currently use the sample circular mean.
+Circular statistics has found substantial application in science and engineering. One of the fundamental problems in circular statistics is that of estimating the \emph{mean direction} of a circular random variable from a number of observations. %We consider to different definitions of the mean direction, the \emph{circular} (or \emph{extrinsic}) \emph{mean} and the \emph{intrinsic mean}. 
+The standard approach in the literature is called the \emph{sample circular mean} and its asymptotic properties are well known. It can also be computed efficiently in a number of arithmetic operations that is linear in the number of observations. In this paper we consider an alternative estimator called the \emph{sample intrinsic mean} that is based on minimising squared arc length. We show how this estimator can be computed efficiently in a linear number of operations using an algorithm from algebraic number theory and we derive its asymptotic properties. 
+In some scenarios the sample circular mean and the sample intrinsic mean are estimators of the same quantity and can therefore be compared.  We show both theoretically and by simulation that in some of these scenarios the sample intrinsic mean is statistically more accurate than the sample circular mean. As such the results in this paper potentially have implications for the wide variety of fields in science, engineering and statistics that currently use the sample circular mean.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Circular statistics, mean direction estimation, lattice theory, nearest lattice point problem.
+Circular statistics, mean direction estimation, intrinsic mean, lattice theory, nearest lattice point problem.
 \end{IEEEkeywords}
 
 
 \section{Introduction}\label{sec:introduction}
 
-The field of circular statistics aims to describe the nature of data that is measured in angles or 2-dimensional unit vectors or complex numbers on the unit circle \cite{Mardia_directional_statistics,Jupp_mardia_unified_directional_statistics_1989,mardia_stat_dir_data_jorver_1975,mardia_stat_dir_data_book_1975,Fisher1993,Jammalamadaka_dir_stat_book}.  Such data occur frequently in science, particularly in astronomy, biology \cite{Morellato_circ_stat_phenology_2010,batschelet1981circular,Cochranmigbridcalcircstat2004,Bolesspinylobnavcircstat2003}, medicine \cite{Mann_circstat_med_cement_2003,Lediseasecircstat2003}, geology, geography and meteorology~\cite{CAPACCIONI_imanal_circ_stat_geol_1997,Fullermagfieldrevcircstat1996,Bowersdirstatwindwaves2000,Fisher_bootstrap_geo_1_1990,Marida_geosciences_1981}, and also in engineering, particularly in communications and radar \cite{Fogel1989_bit_synch_zero_crossings,Fogel1988,Elton_circstat_radar_pulse_1994,Elton96robustparameter1996,Clarkson2007,McKilliamLinearTimeBlockPSK2009,McKilliam2007,Clarkson1996}.  A meteorological example is the direction of the wind, and a biological example is the direction of flight taken by a bird. %The field of circular statistics is in some sense an ancient one, probably begun when mankind first started recording the motion of the sun, the moon and the stars.  A thorough historical account of the subject is given by Fisher \cite[Ch.~1]{Fisher1993}.
+The field of circular statistics aims to describe the nature of data that is measured in angles or 2-dimensional unit vectors or complex numbers on the unit circle \cite{Mardia_directional_statistics,Jupp_mardia_unified_directional_statistics_1989,mardia_stat_dir_data_book_1975,Fisher1993,Jammalamadaka_dir_stat_book}.  Such data occur frequently in science, particularly in astronomy, biology \cite{batschelet1981circular,Cochranmigbridcalcircstat2004,Bolesspinylobnavcircstat2003}, medicine \cite{Mann_circstat_med_cement_2003,Lediseasecircstat2003}, geology, geography and meteorology~\cite{Fisher_bootstrap_geo_1_1990,Marida_geosciences_1981}, and also in engineering, particularly in communications and radar \cite{Fogel1989_bit_synch_zero_crossings,Elton96robustparameter1996,Clarkson2007,McKilliamLinearTimeBlockPSK2009,McKilliam2007}.  A meteorological example is the direction of the wind, and a biological example is the direction of flight taken by a bird. %The field of circular statistics is in some sense an ancient one, probably begun when mankind first started recording the motion of the sun, the moon and the stars.  A thorough historical account of the subject is given by Fisher \cite[Ch.~1]{Fisher1993}.
+Circular statistics can be considered as a special case of the more general field of statistics on Riemannian manifolds~\cite{Bhattacharya_int_ext_means_2003,Bhattacharya_int_ext_means_2005,Pennec_int_st_rm_2006,bwhk07a}.  Circular statistics is then the study of statistics on the manifold $S^1$.  Here we focus specifically on circular statistics but we will make some connections to the more general theory.
 
-A fundamental and useful problem in circular statistics is that of estimating the \emph{mean direction} of a circular random variable from a number, say $N$, of observations. For example, if you listen to the weather report you may be told (an estimate of) the direction of the wind.  Obtaining an accurate estimate requires a method for accurately estimating the mean wind direction from a number of observations of the wind direction. The problem of estimating mean direction also appears in signal processing problems such as phase and frequency estimation \cite{Quinn2009_dasp_phase_only_information_loss,Lovell1991,McKilliamFrequencyEstimationByPhaseUnwrapping2009,Quinn2001,Clarkson1999,Tretter1985,McKilliam2010thesis}, polynomial phase estimation~\cite{McKilliam2009asilomar_polyest_lattice,McKilliam2010thesis,Kitchen_polyphase_unwrapping_1994,Morelande_bayes_unwrapping_2009_tsp}, noncoherent detection \cite{McKilliamLinearTimeBlockPSK2009,McKilliam2010thesis,Sweldens2001,Mackenthun1994} and delay and period estimation from sparse observations \cite{Elton96robustparameter1996,Clarkson2007,McKilliam2007,McKilliam2010thesis,Fogel1988,Fogel1989_bit_synch_zero_crossings,Sidiropoulos2005}. 
+A fundamental and useful problem in circular statistics is that of estimating the \emph{mean direction} of a circular random variable from a number, say $N$, of observations. For example, if you listen to the weather report you may be told (an estimate of) the direction of the wind.  Obtaining an accurate estimate requires a method for accurately estimating the mean wind direction from a number of observations of the wind direction. The problem of estimating mean direction also appears in signal processing problems such as phase and frequency estimation \cite{Quinn2009_dasp_phase_only_information_loss,Lovell1991,McKilliamFrequencyEstimationByPhaseUnwrapping2009,Quinn2001,McKilliam2010thesis}, polynomial phase estimation~\cite{McKilliam2009asilomar_polyest_lattice,McKilliam2010thesis,Kitchen_polyphase_unwrapping_1994}, noncoherent detection \cite{McKilliamLinearTimeBlockPSK2009,McKilliam2010thesis,Mackenthun1994} and delay and period estimation from sparse observations \cite{Elton96robustparameter1996,Clarkson2007,McKilliam2007,McKilliam2010thesis,Fogel1989_bit_synch_zero_crossings}. 
 
-Unlike the case of random variables on the real line where the mean is uniquely defined, the definition of \emph{mean direction} of a circular random variable is somewhat open to interpretation. The most common definition in the literature, called the \term{circular mean}, is derived by considering circular random variables as unit vectors in 2-dimensions or equivalently complex numbers on the unit circle. Given $N$ observations the appropriate estimator for the circular mean is the \emph{sample circular mean} which can be computed efficiently by averaging $N$ complex numbers. This requires only $O(N)$ arithmetic operations.  The asymptotic properties of the sample circular mean under various assumptions are also well studied \cite{Mardia_directional_statistics,Quinn2009_dasp_phase_only_information_loss,Jammalamadaka_dir_stat_book,McKilliam2010thesis}.
+Unlike the case of random variables on the real line where the mean is uniquely defined, the definition of \emph{mean direction} of a circular random variable is somewhat open to interpretation. The most common definition in the literature, called the \term{circular mean}, is derived by considering circular random variables as unit vectors in 2-dimensions or equivalently complex numbers on the unit circle. Given $N$ observations the appropriate estimator for the circular mean is the \emph{sample circular mean} which can be computed efficiently by averaging $N$ complex numbers. This requires only $O(N)$ arithmetic operations.  The asymptotic properties of the sample circular mean under various assumptions are also well studied \cite{Mardia_directional_statistics,Quinn2009_dasp_phase_only_information_loss,Jammalamadaka_dir_stat_book,McKilliam2010thesis}.  In the more general theory of statistics on manifolds the circular mean is called the \emph{extrinsic mean} and its asymptotic properties are know even in this more general setting~\cite{Bhattacharya_int_ext_means_2003}.
 
-In this paper we consider an alternative definition of mean direction called the \term{unwrapped mean}\index{unwrapped mean} which is based on minimising the expected squared arc length. This definition is similar to that of the so called \emph{circular median} that is based on minimising arc length (without squaring)~\cite{Purkayastha_more_on_circ_median_1995,Liu_ordering_dir_data_1992,Chan_more_median_estimators_on_spheres_1993,mardia_stat_dir_data_jorver_1975,Mardia_directional_statistics,Otieno_phd_circ_2002,Otieno_circ_dir_ecolo_2006}. Surprisingly the \emph{unwrapped mean} has received little attention in the literature. An exception is Chan and He~\cite{Chan_more_median_estimators_on_spheres_1993} who briefly discuss the idea of minimising squared arc length, but focus more intently on minimising the arc length directly.  It appears that estimators based on minimising squared arc length have been overlooked. Perhaps one reason for this is that no efficient way of computing an estimate of the unwrapped mean from a sequence of observations was previously available.  We will describe an estimator called the \emph{angular least squares estimator} that can be computed efficiently using an algorithm from algebraic number theory for finding a \emph{nearest lattice point} in a famous lattice called $A_n^*$ \cite{McKilliam2009CoxeterLattices,McKilliam2008b,McKilliam2008,SPLAG,Conway1982FastQuantDec,Conway1982VoronoiRegions,Martinet2003,Voronoi1908_main_paper}. The number of operations required is $O(N)$, the same as required by the sample circular mean. We also describe the asymptotic properties of the angular least squares estimator showing that it is a strongly consistent estimator of the unwrapped mean and that it is asymptotically normally distributed.
+In this paper we consider an alternative definition of mean direction called the \term{intrinsic mean}\index{intrinsic mean} which is based on minimising the expected squared arc length. %This definition is similar to that of the so called \emph{circular median} that is based on minimising arc length (without squaring)~\cite{Purkayastha_more_on_circ_median_1995,Liu_ordering_dir_data_1992,Chan_more_median_estimators_on_spheres_1993,mardia_stat_dir_data_jorver_1975,Mardia_directional_statistics,Otieno_phd_circ_2002,Otieno_circ_dir_ecolo_2006}.  
+%In the theory of statistics on manifolds 
+The intrinsic mean is sometimes also called the \emph{Fr\'{e}chet mean}.  The intrinsic mean can be estimated by the \emph{sample intrinsic mean} and it is known that this estimator is strongly consistent~\cite{Ziezold_intrinsic_mean_1977,Bhattacharya_int_ext_means_2003}.  The asymptotic distribution of the intrinsic mean has been studied by Bhattacharya and  Patrangenaru~\cite{Bhattacharya_int_ext_means_2005} under restrictive assumptions on the underlying probability distribution.  For the purpose of circular statistics these assumptions involve the distribution having no mass in an interval containing the point antipodal (or opposite) to the intrinsic mean.  This precludes many popular circular distributions such as the von Mises, the wrapped normal, and the projected normal.
 
-Maximum likelihood estimation has been a common approach to direction estimation in the circular statistics literature (as it is in all of estimation theory)~\cite{Mardia_directional_statistics,Jammalamadaka_dir_stat_book}. Unfortunately, maximum likelihood estimation implicitly assumes that the underlying probability density function is known. For random variables on the real line a common assumption is that of Gaussianity and this is typically justified by appealing to the central limit theorem, but is sometimes also justified experimentally~\cite{Nyquist1924}. For circular random variables there is less evidence to suggest that a particular distribution should be chosen. A common assumption is that of the von Mises distribution~\cite{Upton_approx_cf_vm_1986} or the wrapped normal~\cite{Craig_time_ser_circ_thesis1988}, but such assumptions are not always convincing. This problem has been expressed by many authors and has encouraged the use of non-parametric techniques, such as bootstrapping, for dealing with circular statistics~\cite{RaoJammalamadaka_non_parimetric_bootstrap_circ_1984,Brunner_nonpari_circ_1994,Fisher_bootstrap_geo_1_1990}\cite[Ch.~7]{Jammalamadaka_dir_stat_book}\cite[Ch.~8]{Fisher1993}. 
+Restricting to the case of circular statistics Quinn~\cite{Quinn2007} relaxed these assumption and derived the asymptotic distribution of the sample intrinsic mean for the case when the probability distribution is unimodal and symmetric.  Here, we relax these unimodality assumptions.  We derive the asymptotic distribution of the sample intrinsic mean showing that it is asymptotically normally distributed whenever the underlying distribution has a well defined intrinsic mean.
+% and satisfies a mild condition on the value of its density function at the point antipodal to the intrinsic mean. BLERG
 
-Unfortunately, these non-parametric techniques are typically computationally intensive and do not suit applications in signal processing such as phase and frequency estimation, polynomial phase estimation, noncoherent detection, or delay estimation that are often implemented on low-power computing devices and operate potentially thousands of times per second.  So our aim is to construct computationally efficient estimators that work well under a wide variety of distributional assumptions. In this paper we show that both the sample circular mean and the angular least squares estimator satisfy this goal.
+%Surprisingly the \emph{intrinsic mean} has received little attention in the literature. An exception is Chan and He~\cite{Chan_more_median_estimators_on_spheres_1993} who briefly discuss the idea of minimising squared arc length, but focus more intently on minimising the arc length directly.  It appears that estimators based on minimising squared arc length have been overlooked. Perhaps one reason for this is that no efficient way of computing an estimate of the intrinsic mean from a sequence of observations was previously available.  
 
-The paper is organised in the following way.  In Section~\ref{sec:circ-rand-vari} we briefly introduce circular random variables and relevant notation. In Section~\ref{sec:circ-mean-vari} we describe the circular mean and show that the sample circular mean converges almost surely to the circular mean whenever it \emph{exists} (in a sense we will make precise). We show that the sample circular mean is asymptotically normally distributed. These results have appeared previously in the literature in various forms~\cite{Quinn2009_dasp_phase_only_information_loss,Fisher_common_mean_direction_dir_est_no_dist_assumptions1983,Jammalamadaka_dir_stat_book,mardia_stat_dir_data_book_1975}.  In Section~\ref{sec:unwr-mean-vari} we define the unwrapped mean and the angular least squares estimator. It is shown how the angular least squares estimator can be computed in linear-time by finding a nearest point in the lattice $A_n^*$. It is also shown that the angular least squares estimator converges almost surely to the unwrapped mean whenever it \emph{exists} and that it is asymptotically normally distributed. Similar results under stronger conditions were given by Quinn~\cite{Quinn2007}, but the proof we present is more general and takes a different approach. 
+Computing the sample intrinsic mean is generally considered to be a difficult problem. Bhattacharya and Patrangenaru~\cite{Bhattacharya_int_ext_means_2005} state, ``Much of the literature deals with the special case of what we call the extrinsic mean, perhaps because of the technical difficulties involved in proving the existence of an intrinsic mean and in computing the intrinsic sample mean even when it exists''.  Here we will show that for the specific case of circular statistics the sample intrinsic mean can be computed efficiently using an algorithm from algebraic number theory for finding a \emph{nearest lattice point} in a lattice called $A_n^*$ \cite{McKilliam2009CoxeterLattices,McKilliam2008b,McKilliam2008,SPLAG,Conway1982FastQuantDec,Martinet2003}. The number of operations required is $O(N)$, the same as required by the sample circular mean.
 
-The circular mean and the unwrapped mean are not always equal, but in Section~\ref{sec:relationships_circ_unwrapped_mean} we describe a large class of symmetric circular random variables for which they are equal.  For such circular random variables the angular least squares estimator and sample circular mean are estimators of the same quantity and can therefore be compared.  In Section~\ref{sec:comparingestimatorcircmean} we present simulations comparing the performance of the estimators under various distributional conditions.  The central limit theorems derived in Sections~\ref{sec:circ-mean-vari}~and~\ref{sec:unwr-mean-vari} lead to the hypothesis that the angular least squares estimator will be more accurate when the distribution is `light-tailed' whereas the sample circular mean estimator will be more accurate when the distribution is `heavy-tailed'. We have used the terms `light-tailed' and `heavy-tailed' loosely here, but it will become apparent how this is an appropriate and useful rule of thumb. The simulations are in agreement with the theoretical results and also support this `heavy-tail, light-tail' hypothesis.
+%Maximum likelihood estimation has been a common approach to direction estimation in the circular statistics literature (as it is in all of estimation theory)~\cite{Mardia_directional_statistics,Jammalamadaka_dir_stat_book}. Unfortunately, maximum likelihood estimation implicitly assumes that the underlying probability density function is known. For random variables on the real line a common assumption is that of Gaussianity and this is typically justified by appealing to the central limit theorem, but is sometimes also justified experimentally~\cite{Nyquist1924}. For circular random variables there is less evidence to suggest that a particular distribution should be chosen. A common assumption is that of the von Mises distribution~\cite{Upton_approx_cf_vm_1986} or the wrapped normal~\cite{Craig_time_ser_circ_thesis1988}, but such assumptions are not always convincing. This problem has been expressed by many authors and has encouraged the use of non-parametric techniques, such as bootstrapping, for dealing with circular statistics~\cite{RaoJammalamadaka_non_parimetric_bootstrap_circ_1984,Brunner_nonpari_circ_1994,Fisher_bootstrap_geo_1_1990}\cite[Ch.~7]{Jammalamadaka_dir_stat_book}\cite[Ch.~8]{Fisher1993}. 
+
+%Unfortunately, these non-parametric techniques are typically computationally intensive and do not suit applications in signal processing such as phase and frequency estimation, polynomial phase estimation, noncoherent detection, or delay estimation that are often implemented on low-power computing devices and operate potentially thousands of times per second.  So our aim is to construct computationally efficient estimators that work well under a wide variety of distributional assumptions. In this paper we show that both the sample circular mean and the sample intrinsic mean satisfy this goal.
+
+The paper is organised in the following way.  In Section~\ref{sec:circ-rand-vari} we briefly introduce circular random variables and relevant notation. In Section~\ref{sec:circ-mean-vari} we describe the circular mean and show that the sample circular mean converges almost surely to the circular mean whenever it \emph{exists} (in a sense we will make precise). We show that the sample circular mean is asymptotically normally distributed. These results have appeared previously in the literature in various forms~\cite{Quinn2009_dasp_phase_only_information_loss,Fisher_common_mean_direction_dir_est_no_dist_assumptions1983,Jammalamadaka_dir_stat_book,mardia_stat_dir_data_book_1975,Bhattacharya_int_ext_means_2003}.  In Section~\ref{sec:unwr-mean-vari} we define the intrinsic mean and the sample intrinsic mean. It is shown how the sample intrinsic mean can be computed in linear-time by finding a nearest point in the lattice $A_n^*$. It is also shown that the sample intrinsic mean converges almost surely to the intrinsic mean whenever it exists and that it is asymptotically normally distributed. %Similar results under stronger conditions were given by Quinn~\cite{Quinn2007}, but the proof we present is more general and takes a different approach. 
+
+The circular mean and the intrinsic mean are not always equal, but in Section~\ref{sec:relationships_circ_intrinsic_mean} we describe a large class of symmetric circular random variables for which they are equal.  For such circular random variables the sample intrinsic mean and sample circular mean are estimators of the same quantity and can be meaningfully compared.  In Section~\ref{sec:comparingestimatorcircmean} we present simulations comparing the performance of the estimators under various distributional conditions.  The central limit theorems derived in Sections~\ref{sec:circ-mean-vari}~and~\ref{sec:unwr-mean-vari} lead to the hypothesis that the sample intrinsic mean will be more accurate when the distribution is `light-tailed' whereas the sample circular mean will be more accurate when the distribution is `heavy-tailed'. We have used the terms `light-tailed' and `heavy-tailed' loosely here, but it will become apparent how this is an appropriate and useful rule of thumb. The simulations are in agreement with the theoretical results and also support this `heavy-tail, light-tail' hypothesis.
  
 
 \subsection{Notation}
@@ -56,18 +65,18 @@ We write random variables using capital letters, such as $X$ and $Y$ and circula
 
 \section{Circular random variables}\label{sec:circ-rand-vari}
 
-As the purpose of circular statistics is to describe the nature of \emph{angles} it is common in the literature to define circular random variables to take values on $[0, 2\pi)$ or $[-\pi, \pi)$. In this paper we find it more convenient to define circular random variables to take values on the interval $[-\nicefrac{1}{2}, \nicefrac{1}{2})$. So, when we refer to an \emph{angle} we mean a real number in the interval $[-\nicefrac{1}{2}, \nicefrac{1}{2})$. This is nonstandard but it will allow us to use notation such as $\round{\cdot}$ for rounding and $\fracpart{\cdot}$ for the fractional part in a convenient way, and will also lead to close ties between circular statistics and number theory or, more specifically, the lattice $A_n^*$. 
+As the purpose of circular statistics is to describe the nature of angles it is common in the literature to define circular random variables to take values on $[0, 2\pi)$ or $[-\pi, \pi)$. In this paper we find it more convenient to define circular random variables to take values on the interval $[-\nicefrac{1}{2}, \nicefrac{1}{2})$. So, when we refer to an angle we mean a real number in the interval $[-\nicefrac{1}{2}, \nicefrac{1}{2})$. This is nonstandard but it will allow us to use notation such as $\round{\cdot}$ for rounding and $\fracpart{\cdot}$ for the fractional part in a convenient way, and will also lead to close ties between circular statistics and number theory or, more specifically, the lattice $A_n^*$. 
 
-It is common in the literature to define a special \emph{circular} probability density function (pdf) $f$ to be periodic with period $1$ (or $2\pi$) so that $f(\theta + k) = f(\theta)$ for any integer $k$ and the integral $\int_{T}f(\theta)d\theta = 1$ where $T$ is any interval of length one.  We will not use this definition.  In this paper a circular random variable is a random variable with range within $[-\nicefrac{1}{2},\nicefrac{1}{2})$. The utility of this is that we have not separated \emph{circular} random variables from \emph{regular} random variables in any way. Sometimes it will be convenient to think of a circular random variable as a random variable that returns values in $[-\nicefrac{1}{2},\nicefrac{1}{2})$ and other times it will be more natural to think of a circular random variable as describing angles wrapped around a circle.  %By not making any severe distinction between circular random variables and regular random variables we are able to switch between these two concepts freely without any notational baggage.  
+It is common in the literature to define a special \emph{circular} probability density function (pdf) $f$ to be periodic with period $1$ (or $2\pi$) so that $f(\theta + k) = f(\theta)$ for any integer $k$ and the integral $\int_{T}f(\theta)d\theta = 1$ where $T$ is any interval of length one.  We will not use this definition.  In this paper a circular random variable is a random variable that takes values in $[-\nicefrac{1}{2},\nicefrac{1}{2})$. The utility of this is that we have not separated \emph{circular} random variables from \emph{regular} random variables in any way. Sometimes it will be convenient to think of a circular random variable as a random variable that returns values in $[-\nicefrac{1}{2},\nicefrac{1}{2})$ and other times it will be more natural to think of a circular random variable as describing angles wrapped around a circle.  %By not making any severe distinction between circular random variables and regular random variables we are able to switch between these two concepts freely without any notational baggage.  
 If we wish to consider the pdf $f$ as a periodic function we shall use $f(\fracpart{x})$, which is clearly periodic with period one for $x \in \reals$ because the fractional part function $\fracpart{x} = x - \round{x}$ has period one.
 
-A circular random variable inherits all the properties of a \emph{regular} random variable.  For example, if $\Theta$ is a circular random variable with pdf $f$ the expected value of a function $g(\Theta)$ of $\Theta$ is given in the usual way by
+A circular random variable inherits all the properties of a regular random variable.  For example, if $\Theta$ is a circular random variable with pdf $f$ the expected value of a function $g(\Theta)$ of $\Theta$ is given in the usual way by
 \[
 E[g(\Theta)] = \int_{-\infty}^{\infty}g(\theta)f(\theta)d\theta = \int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}g(\theta)f(\theta)d\theta.
 \]
-This leads to the usual definitions of mean and variance for a circular random variable $E[\Theta]$ and $\var[\Theta] = E[\Theta^2] - E[\Theta]^2$.  A little thought must be given here. The mean $E[\Theta]$ does not necessarily correspond to the \term{mean direction} of $\Theta$ in the sense one might expect.  For example, consider a distribution with equal point masses at $-0.49$ and $0.49$.  The expected value of this random variable is zero, but intuitively a more reasonable estimate for the mean direction is $-\nicefrac{1}{2}$.  One property that any definition of mean direction should have is invariance to translation modulo 1.  That is, if $\Theta$ is a circular random variable with mean direction $\mu$ then for any $\phi \in \reals$ the translated (modulo 1) circular random variable $\fracpart{\Theta + \phi}$ should have mean direction $\fracpart{\mu + \phi}$.  In the following sections we consider two different quantities called the \term{circular mean} and the \term{unwrapped mean} that satisfy this invariance property and correspond with our intuitive notion of mean direction.
+This leads to the usual definitions of mean and variance for a circular random variable $E[\Theta]$ and $\var[\Theta] = E[\Theta^2] - E[\Theta]^2$.  A little thought must be given here. The mean $E[\Theta]$ does not necessarily correspond to the \term{mean direction} of $\Theta$ in the sense one might expect.  For example, consider a distribution with equal point masses at $-0.49$ and $0.49$.  The expected value of this random variable is zero, but intuitively a more reasonable estimate for the mean direction is $-\nicefrac{1}{2}$.  One property that any definition of mean direction should have is invariance to translation modulo 1.  That is, if $\Theta$ is a circular random variable with mean direction $\mu$ then for any $\phi \in \reals$ the translated (modulo 1) circular random variable $\fracpart{\Theta + \phi}$ should have mean direction $\fracpart{\mu + \phi}$.  In the following sections we consider two different quantities called the \term{circular mean} and the \term{intrinsic mean} that satisfy this invariance property and correspond with our intuitive notion of mean direction.
 
-%In this paper we will quite often use the mean and variance of a circular random variable i.e. $E[\Theta]$ and $\var[\Theta]$.  When we want one of the other notions, i.e. the circular mean and circular variance, or the unwrapped mean and unwrapped variance we will always state these names in full.  This is in contrast to much of the circular statistics literature that uses the terms mean and variance to refer to the circular mean and circular variance.
+%In this paper we will quite often use the mean and variance of a circular random variable i.e. $E[\Theta]$ and $\var[\Theta]$.  When we want one of the other notions, i.e. the circular mean and circular variance, or the intrinsic mean and unwrapped variance we will always state these names in full.  This is in contrast to much of the circular statistics literature that uses the terms mean and variance to refer to the circular mean and circular variance.
 
 %\subsection{Plotting a circular probability density function}
 %
@@ -81,34 +90,34 @@ Given a circular random variable with pdf $f$ the most common analogue of `mean'
 \] 
 and the \term{circular variance} given by 
 \[
-\nu = 1 - |c|
+\nu = 1 - |c|,
 \]  
 where 
 \begin{equation}\label{eq:circmeanint}
 c = \int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}} e^{2\pi j \theta} f(\theta) d\theta,
 \end{equation} 
-and $\angle{c}$ and $|c|$ are respectively the complex argument and the magnitude of $c$ \cite[p.~29]{Mardia_directional_statistics}\cite{Fisher1993}. Consider the case when $c = 0$. The circular variance is $1$ but the circular mean is undefined.  In this paper we will say that the distribution \emph{has no circular mean} when $c = 0$. %This is contrast to the mean of a random variable, which is given by $E[\Theta]$ and is always defined.
+and $j = \sqrt{-1}$, and $\angle{c}$ and $|c|$ are respectively the complex argument and the magnitude of $c$ \cite[p.~29]{Mardia_directional_statistics}\cite{Fisher1993}. Consider the case when $c = 0$. The circular variance is $1$ but the circular mean is undefined.  We say that the distribution \emph{has no circular mean} when $c = 0$. %This is contrast to the mean of a random variable, which is given by $E[\Theta]$ and is always defined.
 
 For example, consider the \term{circular uniform distribution} with pdf displayed in Figure~\ref{fig:circularuniformdist}.  From the symmetry of this distribution it can be seen that the value of $c$ given by the integral~\eqref{eq:circmeanint} will be zero and we therefore conclude that this distribution has no circular mean.  This result conforms well with our intuition. The circular uniform distribution is not the only case where the circular mean is undefined. Consider, for example, the bimodal pdf displayed in Figure~\ref{fig:circnomeanbimodal}. Its symmetry clearly ensures that $c = 0$.
 
 %\begin{figure}[tbp]
 %	\centering
 %		\includegraphics[height=6cm]{apps_anstar/distplots/initialdistpic.1}
-%		\caption{A bimodal circular probability density function. The circular and unwrapped means are marked. They are not equal.}
+%		\caption{A bimodal circular probability density function. The circular and intrinsic means are marked. They are not equal.}
 %		\label{fig:plot_initcirc_bimodal}
 %\end{figure}
 
 \begin{figure}[tp]
 	\centering 
 		\includegraphics[width=\linewidth]{figs/wrappeduniform_var0p08-1.mps}
-		\caption{The circular uniform distribution which has no circular mean and no unwrapped mean.}
+		\caption{The circular uniform distribution which has no circular mean and no intrinsic mean.}
 		\label{fig:circularuniformdist}
 \end{figure}
 
 \begin{figure}[tp]
 	\centering
 		\includegraphics[width=\linewidth]{figs/circnomeansym-1.mps}
-		\caption{A bimodal distribution with no circular mean and no unwrapped mean.}
+		\caption{A bimodal distribution with no circular mean and no intrinsic mean.}
 		\label{fig:circnomeanbimodal}
 \end{figure}
 
@@ -137,7 +146,7 @@ The next theorem describes the asymptotic behaviour of this estimator under some
 
 
 \begin{theorem}\label{thm:asymp_arg_complex_mean}
-Let $\Theta_n = \fracpart{\Phi_n + \mu_0}$ where $\Phi_1, \dots, \Phi_N$ are i.i.d. circular random variables with zero circular mean, circular variance $\nu$ and pdf $f$. Let $\hat{\mu}$ denote the sample circular mean of the $\Theta_n$. Then as $N\rightarrow\infty$:
+Let $\Theta_n = \fracpart{\Phi_n + \mu_0}$ where $\Phi_1, \dots, \Phi_N$ are i.i.d. circular random variables with zero circular mean, circular variance $\nu$ and pdf $f$. Let $\hat{\mu}$ denote the sample circular mean of $\mu_0$. Then as $N\rightarrow\infty$:
 \begin{enumerate}
 \item (Strong consistency) $\fracpart{\hat{\mu} - \mu_0}$ converges almost surely to zero.
 \item (Asymptotic normality) The distribution of $\sqrt{N}\fracpart{\hat{\mu} - \mu_0}$ converges to the normal with zero mean and variance 
@@ -146,11 +155,11 @@ Let $\Theta_n = \fracpart{\Phi_n + \mu_0}$ where $\Phi_1, \dots, \Phi_N$ are i.i
 \end{equation}
 \end{enumerate}
 \end{theorem}
-A proof of this theorem is in \cite[p.~88]{McKilliam2010thesis}. Similar proofs in various different forms and under different conditions are given in \cite{Quinn2009_dasp_phase_only_information_loss,Fisher_common_mean_direction_dir_est_no_dist_assumptions1983}~\cite[Chapter~4]{Jammalamadaka_dir_stat_book}~\cite[p.~111]{mardia_stat_dir_data_book_1975}. In the literature the expected value $E[\sin^2(2\pi\Phi_1)]$ is often written in the form
+A proof of this theorem is in \cite[p.~88]{McKilliam2010thesis}. Similar proofs in various different forms and under different conditions are given in \cite{Quinn2009_dasp_phase_only_information_loss,Fisher_common_mean_direction_dir_est_no_dist_assumptions1983}~\cite[Chapter~4]{Jammalamadaka_dir_stat_book}~\cite[p.~111]{mardia_stat_dir_data_book_1975}. In the literature $E[\sin^2(2\pi\Phi_1)]$ is often written in the form
 \[
-E[\sin^2(2\pi\Phi_1)] = \frac{1}{2} E[ 1 - \cos(4\pi\Phi_1) ] = \frac{1}{2}(1 - m_2)
+E[\sin^2(2\pi\Phi_1)] = \frac{1}{2} E[ 1 - \cos(4\pi\Phi_1) ] = \frac{1}{2}(1 - m_2),
 \]
-where $m_2 = E[\cos(4\pi\Phi_1)]$ is the real part of the \emph{second trigonometric moment} of $\Phi_1$ \cite{Fisher_common_mean_direction_dir_est_no_dist_assumptions1983,Fisher1993}. The theorem places conditions on the \emph{fractional part} of the difference, i.e. $\fracpart{\hat{\mu} - \mu_0}$, between the \emph{true} circular mean $\mu_0$ and the estimated circular mean $\hat{\mu}$ rather than directly on the difference $\hat{\mu} - \mu_0$.  This makes sense because the angles $\mu_0$ and $\mu_0 + k$ are equivalent for any integer $k$. So, for example, we expect the angles $0.49$ and $-0.49$ to be \emph{close} together, the difference between them being $\vert\fracpart{-0.49 - 0.49}\vert = 0.02$, and \emph{not} $\vert -0.49 - 0.49\vert = 0.98$. In this way, the theorem asserts that the sample circular mean converges to the circular mean whenever it exists. 
+where $m_2 = E[\cos(4\pi\Phi_1)]$ is the real part of the \emph{second trigonometric moment} of $\Phi_1$~\cite{Fisher_common_mean_direction_dir_est_no_dist_assumptions1983,Fisher1993,Bhattacharya_int_ext_means_2003}.  The theorem places conditions on the \emph{fractional part} of the difference, i.e. $\fracpart{\hat{\mu} - \mu_0}$, between the \emph{true} circular mean $\mu_0$ and the estimated circular mean $\hat{\mu}$ rather than directly on the difference $\hat{\mu} - \mu_0$.  This makes sense because the angles $\mu_0$ and $\mu_0 + k$ are equivalent for any integer $k$. So, for example, we expect the angles $0.49$ and $-0.49$ to be \emph{close} together, the difference between them being $\vert\fracpart{-0.49 - 0.49}\vert = 0.02$, and \emph{not} $\vert -0.49 - 0.49\vert = 0.98$. In this way, the theorem asserts that the sample circular mean converges to the circular mean whenever it exists. 
 
 % Confidence intervals can be computed by estimating $E[\sin^2(2\pi\Phi_1)]$ as
 % \[
@@ -209,23 +218,25 @@ where $m_2 = E[\cos(4\pi\Phi_1)]$ is the real part of the \emph{second trigonome
 
 
 
-\section{The unwrapped mean and its estimation}\label{sec:unwr-mean-vari}
+\section{The intrinsic mean and its estimation}\label{sec:unwr-mean-vari}
 
-Alternatives to the circular mean and circular variance are the \term{unwrapped mean} and \term{unwrapped variance}.  We have chosen the term `unwrapped' because the original motivation for the unwrapped mean and the angular least squares estimator came from the \emph{phase unwrapping} literature, in particular the problems of \emph{frequency estimation} and \emph{polynomial phase estimation} \cite{Tretter1985,McKilliamFrequencyEstimationByPhaseUnwrapping2009,Quinn_on_kay_2000,Morelande_bayes_unwrapping_2009_tsp,Fowler2002_freq_est_by_phases,McKilliam_polyphase_est_icassp_2011}. The idea behind the angular least squares estimator is to `unwrap' the circle as will be seen in the next section. Let $\Theta$ be a circular random variable.  The unwrapped mean of $\Theta$ is the angle $\mu_{\text{unwrap}}$ such that the translated circular random variable $\fracpart{\Theta - \mu_{\text{unwrap}}}$ has minimum squared expectation, that is,
+Alternatives to the circular mean and circular variance are the \term{intrinsic mean} and \term{intrinsic variance}.  
+%We have chosen the term `unwrapped' because the original motivation for the intrinsic mean and the sample intrinsic mean came from the \emph{phase unwrapping} literature, in particular the problems of \emph{frequency estimation} and \emph{polynomial phase estimation} \cite{Tretter1985,McKilliamFrequencyEstimationByPhaseUnwrapping2009,Quinn_on_kay_2000,Morelande_bayes_unwrapping_2009_tsp,Fowler2002_freq_est_by_phases,McKilliam_polyphase_est_icassp_2011}. The idea behind the sample intrinsic mean is to `unwrap' the circle as will be seen in the next section. Let $\Theta$ be a circular random variable.  
+The intrinsic mean of $\Theta$ is the angle $\mu_{\text{intr}}$ such that the translated circular random variable $\fracpart{\Theta - \mu_{\text{intr}}}$ has minimum squared expectation, that is,
 \begin{align}
-\mu_{\text{unwrap}}  &= \arg \min_{\mu \in [-\nicefrac{1}{2}, \nicefrac{1}{2})}E\fracpart{\Theta - \mu}^2 \nonumber \\
+\mu_{\text{intr}}  &= \arg \min_{\mu \in [-\nicefrac{1}{2}, \nicefrac{1}{2})}E\fracpart{\Theta - \mu}^2 \nonumber \\
 &= \arg \min_{\mu \in [-\nicefrac{1}{2}, \nicefrac{1}{2})}\int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}\fracpart{\theta - \mu}^2f(\theta) d\theta. \label{eq:minunrappedmeandef}
 \end{align}
-The unwrapped variance of $\Theta$, denoted $\sigma^2$, is given by 
+The intrinsic variance of $\Theta$, denoted $\sigma^2$, is given by 
 \[
-\sigma^2 = E\fracpart{\Theta - \mu_{\text{unwrap}}}^2 = \int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}\fracpart{\theta - \mu_{\text{unwrap}}}^2f(\theta) d\theta.
+\sigma^2 = E\fracpart{\Theta - \mu_{\text{intr}}}^2 = \int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}\fracpart{\theta - \mu_{\text{intr}}}^2f(\theta) d\theta.
 \]
-%Intuitively the unwrapped mean is such that the pdf of $\fracpart{\Theta - \mu_{\text{unwrap}}}$ is mostly centred around zero.
+%Intuitively the intrinsic mean is such that the pdf of $\fracpart{\Theta - \mu_{\text{intr}}}$ is mostly centred around zero.
 
-For some circular distributions the minimisation that defines the unwrapped mean~(\ref{eq:minunrappedmeandef}) might not be unique.  For example, consider the bimodal probability density function depicted in Figure~\ref{fig:circnomeanbimodal} for which there would by two minima, one at $\nicefrac{1}{2}$ and one at $-\nicefrac{1}{2}$ (it may at first seem that the minima would be at the modes $\nicefrac{1}{4}$ and $-\nicefrac{1}{4}$, but this is not true in this case).  Another example is the circular uniform distribution (Figure~\ref{fig:circularuniformdist}) where the integral from~\eqref{eq:minunrappedmeandef} is $\nicefrac{1}{12}$ for all $\mu$.  We say that such distributions have no unwrapped mean.
+For some circular distributions the minimisation that defines the intrinsic mean~(\ref{eq:minunrappedmeandef}) might not be unique\footnote{The set of minima is often called the~\emph{Fr\'{e}chet mean set}~\cite{Bhattacharya_int_ext_means_2003,Bhattacharya_int_ext_means_2005}.}.  For example, consider the bimodal probability density function depicted in Figure~\ref{fig:circnomeanbimodal} for which there would by two minima, one at $\nicefrac{1}{2}$ and one at $-\nicefrac{1}{2}$ (it may at first seem that the minima would be at the modes $\nicefrac{1}{4}$ and $-\nicefrac{1}{4}$, but this is not true in this case).  Another example is the circular uniform distribution (Figure~\ref{fig:circularuniformdist}) where the integral from~\eqref{eq:minunrappedmeandef} is $\nicefrac{1}{12}$ for all $\mu$.  We say that such distributions have no intrinsic mean.
 
-% A circular random variable, $\Theta$, with zero unwrapped mean, i.e. $\mu_{\text{unwrap}} = 0$, has the special property that the unwrapped mean is equal to the mean, that is
-% \begin{equation}\label{eq:unwrapmean0=mean}
+% A circular random variable, $\Theta$, with zero intrinsic mean, i.e. $\mu_{\text{intr}} = 0$, has the special property that the intrinsic mean is equal to the mean, that is
+% \begin{equation}\label{eq:intrmean0=mean}
 % \mu_{\text{unwrap}} = E[\Theta] = 0
 % \end{equation}
 % and the unwrapped variance is equal to the variance, that is
@@ -233,17 +244,17 @@ For some circular distributions the minimisation that defines the unwrapped mean
 % \sigma^2 = \var[\Theta].
 % \end{equation}
 
-The next lemma describes an interesting property about circular random variables with zero unwrapped mean.  This property will be useful when we consider estimating the unwrapped mean using the angular least squares estimator. 
+The next lemma describes an interesting property about circular random variables with zero intrinsic mean.  This property will be useful when we consider estimating the intrinsic mean using the sample intrinsic mean. 
 
 \begin{lemma}\label{lem:antipolalzerounwpmean}
-Let $\Theta$ be a circular random variable with zero unwrapped mean, unwrapped variance $\sigma^2$ and pdf $f$ such that $f(\fracpart{x})$ is continuous at $x = -\nicefrac{1}{2}$.  Then $f(-\nicefrac{1}{2}) \leq 1$.
+Let $\Theta$ be a circular random variable with zero intrinsic mean, intrinsic variance $\sigma^2$, and pdf $f$ such that $f(\fracpart{x})$ is continuous at $x = -\nicefrac{1}{2}$.  Then $f(-\nicefrac{1}{2}) \leq 1$.
 \end{lemma}
 \begin{proof}
 Define the function
 \[
 g(x) = E\fracpart{\Theta - x}^2 = \int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}\fracpart{\theta - x}^2f(\theta) \, d\theta.
 \]
-Because $\Theta$ has zero unwrapped mean, $g$ is \emph{uniquely} minimised at zero with $g(0) = \sigma^2$.  The proof now proceeds by contradiction. Assume that $f(-\nicefrac{1}{2}) > 1$.  Since $f(\fracpart{x})$ is continuous at $-\nicefrac{1}{2}$, there exists a $\delta > 0$ such that $f(\fracpart{\nicefrac{1}{2} + x}) \geq 1$ for all $x \in (-\delta, \delta)$.  Consider $x$ such that $0 < x < \delta$.  Now $g$ evaluated at $-x$ is,
+Because $\Theta$ has zero intrinsic mean, $g$ is \emph{uniquely} minimised at zero with $g(0) = \sigma^2$.  The proof now proceeds by contradiction. Assume that $f(-\nicefrac{1}{2}) > 1$.  Since $f(\fracpart{x})$ is continuous at $-\nicefrac{1}{2}$, there exists a $\delta > 0$ such that $f(\fracpart{\nicefrac{1}{2} + x}) \geq 1$ for all $x \in (-\delta, \delta)$.  Consider $x$ such that $0 < x < \delta$.  Now $g$ evaluated at $-x$ is,
 \begin{align*}
 &g(-x) = \int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}\fracpart{\theta + x}^2 f(\theta) \, d\theta. \\
 &= \int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2} - x}(\theta + x)^2 f(\theta) \, d\theta + \int_{\nicefrac{1}{2} - x}^{\nicefrac{1}{2}}(\theta + x - 1)^2 f(\theta) \, d\theta \\
@@ -251,22 +262,22 @@ Because $\Theta$ has zero unwrapped mean, $g$ is \emph{uniquely} minimised at ze
 \end{align*}
 For $\theta \in [\nicefrac{1}{2} - x, \nicefrac{1}{2})$, $1 - 2x - 2\theta \leq 0$ and $f(\theta) \geq 1$. Thus
 \begin{align*}
-g(-x) &\leq \sigma^2 + x^2 + \int_{\nicefrac{1}{2} - x}^{\nicefrac{1}{2}}(1 - 2x - 2\theta) \, d\theta \\
-&\leq \sigma^2 + x^2 - x^2 \leq \sigma^2,
+g(-x) &= \sigma^2 + x^2 + \int_{\nicefrac{1}{2} - x}^{\nicefrac{1}{2}}(1 - 2x - 2\theta) \, d\theta \\
+&\leq \sigma^2 + x^2 - x^2 = \sigma^2,
 \end{align*}
 contradicting the fact that $g(0) = \sigma^2$ is the unique minimiser of $g$.
 \end{proof}
 
 
 % \begin{theorem}\label{thm:zerounwpmeanprobbound}
-% Let $\Theta$ be a circular random variable with zero unwrapped mean and unwrapped variance $\sigma^2$ and pdf $f$.  If the periodic function $f(\fracpart{x})$ is continuous at $x = \nicefrac{1}{2}$ then the value of the pdf at $-\nicefrac{1}{2}$ less than or equal to one.  That is, $f(-\nicefrac{1}{2}) \leq 1$.
+% Let $\Theta$ be a circular random variable with zero intrinsic mean and intrinsic variance $\sigma^2$ and pdf $f$.  If the periodic function $f(\fracpart{x})$ is continuous at $x = \nicefrac{1}{2}$ then the value of the pdf at $-\nicefrac{1}{2}$ less than or equal to one.  That is, $f(-\nicefrac{1}{2}) \leq 1$.
 % \end{theorem}
 % \begin{proof}
 % The proof requires the function
 % \[
 % g(x) = \var\fracpart{\Theta - x} = \int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}\fracpart{\theta - x}^2f(\theta) \, d\theta.
 % \]
-% Because $\Theta$ has zero unwrapped mean the function $g$ is \emph{uniquely} minimised at zero at which $g(0) = \sigma^2$. %As $\fracpart{\theta - x} = \fracpart{\theta - \fracpart{x}}$ then we acutaully have that $x = 0$ is the unique minimiser of $g$ for $x \in [-1, 1)$.  That is,
+% Because $\Theta$ has zero intrinsic mean the function $g$ is \emph{uniquely} minimised at zero at which $g(0) = \sigma^2$. %As $\fracpart{\theta - x} = \fracpart{\theta - \fracpart{x}}$ then we acutaully have that $x = 0$ is the unique minimiser of $g$ for $x \in [-1, 1)$.  That is,
 % %\[
 % %\sigma^2 = \min_{x \in (-1, 1)} g(x)
 % %\]
@@ -288,30 +299,44 @@ contradicting the fact that $g(0) = \sigma^2$ is the unique minimiser of $g$.
 % \end{proof}
 
 
+\subsection{The lattice $A_n^*$}
 
-\subsection{The angular least squares estimator}\label{sec:angul-least-squar}
+Before we describe the sample intrinsic mean and a fast algorithm for its computation we require some simple properties of the lattice $A_n^*$.   The lattice $A_n^*$ is the set of points in $(n+1)$-dimensional Euclidean space $\reals^{n+1}$ given by
+\[
+A_n^* = \{ \Qbf \wbf \mid \wbf \in \ints^{n+1} \},
+\]
+where
+\begin{equation}\label{eq:Qproj}
+\Qbf = \Ibf - \frac{\onebf\onebf^\prime}{\onebf^\prime\onebf} = \Ibf - \frac{\onebf\onebf^\prime}{n+1}
+\end{equation}
+is the projection matrix orthogonal to the column vector $\onebf = [1,1,\dots,1]^{\prime}$ of all ones,  superscript $^\prime$ denotes the vector transpose and $\Ibf$ is the $(n+1) \times (n+1)$ identity matrix ~\cite{McKilliam2010thesis,McKilliam2009CoxeterLattices,McKilliam2008}~\cite[p. 115]{SPLAG}.  Note that multiplication of a vector $\ybf$ by $\Qbf$ (i.e. projection of $\ybf$ orthogonal to $\onebf$) can be computed in $O(n)$ operations by $\Qbf\ybf = \ybf - \frac{1}{n+1}\onebf^\prime \ybf$.
 
-We now describe the angular least squares estimator of the unwrapped mean.  Let $\Theta_1,\dots,\Theta_N$ be circular random variables and let
+A fundamental problem in lattice theory is the \emph{nearest lattice point problem}~\cite{Agrell2002} and this can be efficiently solved for the lattice $A_n^*$.  That is, given a point $\ybf\in\reals^{n+1}$ we can compute the lattice point in $A_n^*$ that is nearest in Euclidean distance to $\ybf$.  Equivalently we can compute a column vector of integers $\wbf \in \ints^{n+1}$ that minimises the Euclidean distance $\|\ybf - \Qbf\wbf\|^2$.  This column vector can be computed in $O(n)$ arithmetic operations using the algorithm from~\cite{McKilliam2009CoxeterLattices}\cite[Ch. 3]{McKilliam2010thesis}.
+
+\subsection{The sample intrinsic mean}\label{sec:angul-least-squar}
+
+Let $\Theta_1,\dots,\Theta_N$ be circular random variables and let
 \[
 SS(\mu) = \sum_{n=1}^{N}{ \fracpart{\Theta_n - \mu}^2 }.
 \]
-The angular least squares estimator is the minimiser of $SS(\mu)$. 
+The sample intrinsic mean is the minimiser of $SS(\mu)$. 
 %Intuitively this estimator chooses the angle $\hat{\mu}$ such that the rotated random variables $\fracpart{\Theta_n - \hat{\mu}}$ are closet to zero in the sense of square arc length. 
-This should be compared with the \emph{circular median}, which is defined as the minimiser of
-\begin{equation}\label{eq:circmedobjfunc}
-\sum_{n=1}^{N}{ \abs{\fracpart{\Theta_n - \mu}} }.
-\end{equation}
-The circular median has been studied quite thoroughly in the literature \cite{Purkayastha_more_on_circ_median_1995,Fisher_spherical_medians_1985,mardia_stat_dir_data_book_1975}, but the sum of squares function $SS$ has received comparatively little attention. One reason for this might be that~\eqref{eq:circmedobjfunc} is convex in $\mu$ and therefore computing the circular median is straightforward~\cite{Fisher_spherical_medians_1985}\footnote{In~\cite{Fisher_spherical_medians_1985} Fisher actually deals with computing the circular median in more dimensions that two, i.e. the \emph{spherical median}. Due to convexity computing the median even in these higher dimensions can be achieved by standard optimisation techniques~\cite[p.~347]{Fisher_spherical_medians_1985}.}. On the other hand $SS$ is not convex in $\mu$ and therefore minimising $SS$ is potentially difficult. This fact may have prompted authors to ignore the angular least squares estimator.  
-
-However, we shall show that the angular least squares estimator can be computed quickly in $O(N)$ operations by finding a nearest point in the lattice $A_{N-1}^*$ \cite{McKilliam2008,McKilliam2009CoxeterLattices}~\cite[p.~108]{SPLAG}.  To see this write the sum of squares function $SS$ as
+% This should be compared with the \emph{circular median}, which is defined as the minimiser of
+% \begin{equation}\label{eq:circmedobjfunc}
+% \sum_{n=1}^{N}{ \abs{\fracpart{\Theta_n - \mu}} }.
+% \end{equation}
+% The circular median has been studied quite thoroughly in the literature \cite{Purkayastha_more_on_circ_median_1995,Fisher_spherical_medians_1985,mardia_stat_dir_data_book_1975}, but the sum of squares function $SS$ has received comparatively little attention. One reason for this might be that~\eqref{eq:circmedobjfunc} is convex in $\mu$ and therefore computing the circular median is straightforward~\cite{Fisher_spherical_medians_1985}\footnote{In~\cite{Fisher_spherical_medians_1985} Fisher actually deals with computing the circular median in more dimensions than two, i.e. the \emph{spherical median}. Due to convexity computing the median even in these higher dimensions can be achieved by standard optimisation techniques~\cite[p.~347]{Fisher_spherical_medians_1985}.}. On the other hand $SS$ is not convex in $\mu$ and therefore minimising $SS$ is potentially difficult. This fact may have prompted authors to ignore the sample intrinsic mean.  
+We will show that the sample intrinsic mean can be computed quickly in $O(N)$ operations by finding a nearest point in the lattice $A_{N-1}^*$.  To see this write the sum of squares function $SS$ as
 \[
 SS(\mu) = \sum_{n=1}^{N}{ \left( \Theta_n - \mu - W_n \right)^2 }
 \]
-where $W_n$ are integers given by $\round{\Theta_n - \mu}$. The $W_n$ are called \term{wrapping variables}\index{wrapping variables} because they describe how the $\Theta_n - \mu$ \emph{wrap} around the circle.  By considering the $W_n$ as nuisance parameters to be estimated $SS$ can be written as a function of both $\mu$ and the $W_n$ and the angular least squares estimator can be found by minimising over both $\mu$ and the $W_n$. It may at first appear that we have made this problem hard for ourselves because there was only one variable, $\mu$, to minimise over and now there are $N+1$ variables, $\mu$ and all of the $W_1, \dots, W_N$.  However, we will show how this joint minimisation problem can be solved efficiently.  Write $SS$ as a function of $\mu$ and the $W_n$ using vectors\footnote{We have slightly abused notation here by reusing $SS$. This should not cause any confusion as $SS(\mu)$ and $SS(\mu,\wbf)$ and $SS(\wbf)$ are easily told apart by their inputs.} as
+where $W_n$ are integers given by $\round{\Theta_n - \mu}$. 
+%The $W_n$ are called \term{wrapping variables}\index{wrapping variables} because they describe how the $\Theta_n - \mu$ \emph{wrap} around the circle.  
+By considering the $W_n$ as nuisance parameters to be estimated, $SS$ can be written as a function of both $\mu$ and the $W_n$ and the sample intrinsic mean can be found by minimising over both $\mu$ and the $W_n$. It may at first appear that we have made this problem hard for ourselves because there was only one variable, $\mu$, to minimise over and now there are $N+1$ variables, $\mu$ and all of the $W_1, \dots, W_N$.  However, we will show how this joint minimisation problem can be solved efficiently.  Write $SS$ as a function of $\mu$ and the $W_n$ using vectors\footnote{We have slightly abused notation here by reusing $SS$. This should not cause any confusion as $SS(\mu)$ and $SS(\mu,\wbf)$ and $SS(\wbf)$ are easily told apart by their inputs.} as
 \[
 SS(\mu, \wbf) = \| \thetabf - \mu\onebf - \wbf \|^2
 \]
-where $\thetabf = [\Theta_1, \dots, \Theta_N]^\prime$ and $\wbf = [W_1, \dots, W_N]^\prime$ and $\onebf$ is the all ones column vector, $^\prime$ denotes the vector transpose and $\|\xbf\|^2 = \xbf^\prime\xbf$ is the Euclidean norm. Fixing $\wbf$ and minimising with respect to $\mu$ gives
+where $\thetabf = [\Theta_1, \dots, \Theta_N]^\prime$ and $\wbf = [W_1, \dots, W_N]^\prime$.  Fixing $\wbf$ and minimising with respect to $\mu$ gives
 \begin{equation} \label{eq:hat_theta_cal_anstar}
 \hat{\mu} = \frac{\dotprod{(\thetabf - \wbf)}{\onebf}}{\dotprod{\onebf}{\onebf}}.
 \end{equation}
@@ -319,22 +344,25 @@ Substituting this into $SS(\mu, \wbf)$ gives
 \[
 SS(\wbf) = \min_{\mu}SS(\mu, \wbf) = \| \Qbf\thetabf - \Qbf\wbf \|^2
 \]
-where $\Qbf = \Ibf - \onebf\onebf^\prime / (\onebf^\prime\onebf)$ and $\Ibf$ is the $N \times N$ identity matrix. $\Qbf$ is related to the generator matrix for the lattice $A_{N-1}^*$~\cite{McKilliam2008,McKilliam2009CoxeterLattices}~\cite[p. 115]{SPLAG}. It follows  that $\Qbf\wbf$ is a lattice point in $A_{N-1}^*$ and that minimising $SS(\wbf)$ is equivalent to finding the nearest lattice point in $A_{N-1}^*$ to $\Qbf\thetabf$.  A number of algorithms exist to compute the nearest point, the fastest of which require a linear number of operations in $N$~\cite{McKilliam2009CoxeterLattices,McKilliam2008,McKilliam2008b}. Once $\hat{\wbf}$ has been found, the estimate $\hat{\mu}$ is given by substituting $\hat{\wbf}$ for $\wbf$ in~\eqref{eq:hat_theta_cal_anstar}.  Because the nearest point can be found in $O(N)$ operations the angular least squares estimator can be computed in linear-time. The next theorem describes the asymptotic behaviour of the estimator.
+where $\Qbf$ is the orthogonal projection matrix from~\eqref{eq:Qproj}. It follows  that $\Qbf\wbf$ is a lattice point in $A_{N-1}^*$ and that minimising $SS(\wbf)$ is equivalent to finding the nearest lattice point in $A_{N-1}^*$ to $\Qbf\thetabf$.  This can be achieved in $O(N)$ operations. Once $\hat{\wbf}$ has been found, the estimate $\hat{\mu}$ is given by substituting $\hat{\wbf}$ for $\wbf$ in~\eqref{eq:hat_theta_cal_anstar}.  Because the nearest point can be found in $O(N)$ operations the sample intrinsic mean can be computed in linear-time. The next theorem describes the asymptotic behaviour of the estimator.
 
 \begin{theorem}\label{thm:asymp_proof_m=0}
-Let $\Theta_n = \fracpart{\Phi_n + \mu_0}$ where $\Phi_1, \dots, \Phi_N$ are i.i.d. circular random variables with zero unwrapped mean, unwrapped variance $\sigma^2$ and pdf $f$. Let $\hat{\mu}$ denote the angular least squares estimator of the $\Theta_n$.  Then as $N\rightarrow\infty$:
+Let $\Theta_n = \fracpart{\Phi_n + \mu_0}$ where $\Phi_1, \dots, \Phi_N$ are i.i.d. circular random variables with zero intrinsic mean, intrinsic variance $\sigma^2$ and pdf $f$. Let $\hat{\mu}$ denote the sample intrinsic mean of $\mu_0$.  Then as $N\rightarrow\infty$:
 \begin{enumerate}
 \item (Strong consistency) $\fracpart{\hat{\mu} - \mu_0}$ converges to zero almost surely. 
-\item (Asymptotic normality) If $f(\fracpart{x})$ is continuous at $x = -\nicefrac{1}{2}$ and $f(-\nicefrac{1}{2}) \leq 1$ then the distribution of $\sqrt{N}\fracpart{\hat{\mu} - \mu_0}$ converges to the normal with zero mean and variance
+\item (Asymptotic normality) If $f(\fracpart{x})$ is continuous at $x = -\nicefrac{1}{2}$ and $f(-\nicefrac{1}{2}) < 1$ then the distribution of $\sqrt{N}\fracpart{\hat{\mu} - \mu_0}$ converges to the normal with zero mean and variance
 \begin{equation}\label{eq:asympvarm=0}
 \frac{\sigma^2}{\big(1 - f(-\nicefrac{1}{2}) \big)^2}.
 \end{equation}
 \end{enumerate}
 \end{theorem}
-%This theorem asserts that the angular least squares estimator converges to the unwrapped mean whenever it exists (again the fractional part of the difference $\fracpart{\hat{\mu} - \mu_0}$ is used, as is natural). 
+%This theorem asserts that the sample intrinsic mean converges to the intrinsic mean whenever it exists (again the fractional part of the difference $\fracpart{\hat{\mu} - \mu_0}$ is used, as is natural). 
 Before we begin the proof we shall comment on the requirements for part 2 of this theorem.  From Lemma \ref{lem:antipolalzerounwpmean} we know that $f(-\nicefrac{1}{2}) \leq 1$, so the only case not handled by this theorem is when equality holds, i.e. when $f(-\nicefrac{1}{2}) = 1$ or when $f(\fracpart{x})$ is not continuous at $x = -\nicefrac{1}{2}$. In these exceptional cases other expressions for the asymptotic variance can be found, but this comes at a substantial increase in complexity, so we have opted to omit them. Circular distributions that do not satisfy these requirements are unlikely to be needed in practice.
 
-We now prove Theorem~\ref{thm:asymp_proof_m=0}. A similar result under stronger conditions is given by Quinn~\cite{Quinn2007}, but the proof we present here is more general and takes a different approach. The proof follows the format of more general results for frequency estimation by \emph{phase unwrapping} \cite{McKilliamFrequencyEstimationByPhaseUnwrapping2009} and for polynomial phase estimation by phase unwrapping \cite[Ch.~8]{McKilliam2010thesis}. In this special case the proof can be (and has been) substantially simplified.
+Part 1 of this theorem follows as a special case of the result of Ziezold~\cite{Ziezold_intrinsic_mean_1977} and also~\cite[Theorem 2.3(b)]{Bhattacharya_int_ext_means_2003}. Bhattacharya and Patrangenaru~\cite[Theorem 2.3]{Bhattacharya_int_ext_means_2005} derived the asymptotic distribution in the case when the distribution $f$ is zero in an interval about the antipodal point, i.e. when $f(x) = 0$ for all $x$ such that $\abs{\fracpart{x - \nicefrac{1}{2}}} > \delta$ for some $\delta > 0$.  This precludes the use of popular circular distributions such as the von Mises, the wrapped normal, and the projected normal.  Quinn~\cite{Quinn2007} has previously derived this theorem for the case when $f$ is unimodal and symmetric with mode at the intrinsic mean $\mu_0$.
+
+%We now prove Theorem~\ref{thm:asymp_proof_m=0}. A similar result under stronger conditions is given by Quinn~\cite{Quinn2007}, but the proof we present here is more general and takes a different approach. The proof follows the format of more general results for frequency estimation by \emph{phase unwrapping} \cite{McKilliamFrequencyEstimationByPhaseUnwrapping2009} and for polynomial phase estimation by phase unwrapping \cite[Ch.~8]{McKilliam2010thesis}. In this special case the proof can be (and has been) substantially simplified.
+
 \begin{proof}
 Substituting $\Theta_n = \fracpart{\Phi_n + \mu_0}$ into $SS$ gives
 \begin{align*}
@@ -355,7 +383,7 @@ Let
 \[
 Q(\lambda) = EL_N(\lambda) = \frac{1}{N}\sum_{n=1}^{N}E\fracpart{\Phi_n - \lambda}^2 = E\fracpart{\Phi_1 - \lambda}^2
 \] 
-and observe that $Q(\lambda)$ is continuous and is uniquely minimised when $\lambda = 0$ because $\Phi_1$ has zero unwrapped mean. Therefore
+and observe that $Q(\lambda)$ is continuous and is uniquely minimised when $\lambda = 0$ because $\Phi_1$ has zero intrinsic mean. Therefore
 \[
 0 \leq Q(\hat{\lambda}) - Q(0).
 \]
@@ -363,7 +391,7 @@ Adding both inequalities and taking appropriate absolute values gives
 \begin{align*}
 0 &\leq Q(\hat{\lambda}) - Q(0) \\ 
 & \leq Q(\hat{\lambda}) - Q(0) + L_N(0) - L_N(\hat{\lambda})\\
-& \leq |Q(\hat{\lambda}) - L_N(\hat{\lambda})| + |L_N(0) - Q(0)|.
+& \leq |Q(\hat{\lambda}) - L_N(\hat{\lambda})| + |L_N(0) - Q(0)|,
 \end{align*}
 and because of~\eqref{eq:supELNLN} the last line converges almost surely to zero as $N \rightarrow \infty$ and therefore $Q(\hat{\lambda}) \rightarrow Q(0)$ almost surely. To complete the proof of strong consistency we use the device of Jenrich~\cite{Jenrich_asymp_nonlin_ulln_1969}. We use the
 subscript $N$ to emphasise that $\hat{\lambda}$ depends on $N.$ Suppose that the sequence
@@ -397,32 +425,32 @@ We require an expression for the distribution of
 %\end{equation} 
 It is proved in Lemma~\ref{lem:EI_n} in the appendix that
 \[
-\frac{1}{\sqrt{N}}\sum_{n=1}^{N} \round{ \Phi_n - \hat{\lambda}} = o_P(1)  - \sqrt{N} \hat{\lambda}( f(-\nicefrac{1}{2}) + o_p(1) )
+\frac{1}{\sqrt{N}}\sum_{n=1}^{N} \round{ \Phi_n - \hat{\lambda}} = o_P(1)  - \sqrt{N} \hat{\lambda}( f(-\nicefrac{1}{2}) + o_P(1) )
 \]
-where $o_p(1)$ converges in probability to zero as $N\rightarrow\infty$.  So
+where $o_P(1)$ converges in probability to zero as $N\rightarrow\infty$.  So
 \[
-\sqrt{N}\hat{\lambda}(1 - f(-\nicefrac{1}{2}) + o_p(1) ) = o_P(1) + \frac{1}{\sqrt{N}}\sum_{n=1}^{N} \Phi_n
+\sqrt{N}\hat{\lambda}(1 - f(-\nicefrac{1}{2}) + o_P(1) ) = o_P(1) + \frac{1}{\sqrt{N}}\sum_{n=1}^{N} \Phi_n
 \]
 and therefore $\sqrt{N}\hat{\lambda} = \sqrt{N}\fracpart{\hat{\mu} - \mu_0}$ converges in probability to
 \[
 \frac{\frac{1}{\sqrt{N}}\sum_{n=1}^{N} \Phi_n}{1 - f(-\nicefrac{1}{2})}.
 \]
-The $\Phi_1\dots,\Phi_N$ are i.i.d. with zero unwrapped mean and unwrapped variance $\sigma^2$ so $E[\Phi_n] = 0$ and $\var[\Phi_n] = \sigma^2$ and, by the standard central limit theorem, the distribution of $\sqrt{N}\fracpart{\hat{\mu} - \mu_0}$ converges to the zero mean normal with variance $\sigma^2(1 - f(-\nicefrac{1}{2}))^{-2}$ as required. 
+The $\Phi_1\dots,\Phi_N$ are i.i.d. with zero intrinsic mean and intrinsic variance $\sigma^2$ so $E[\Phi_n] = 0$ and $\var[\Phi_n] = \sigma^2$ and, by the standard central limit theorem, the distribution of $\sqrt{N}\fracpart{\hat{\mu} - \mu_0}$ converges to the zero mean normal with variance $\sigma^2(1 - f(-\nicefrac{1}{2}))^{-2}$ as required. 
 \end{proof}
 
 
 
-\section{Relationships between the circular and unwrapped mean}\label{sec:relationships_circ_unwrapped_mean}
+\section{Relationships between the circular and intrinsic mean}\label{sec:relationships_circ_intrinsic_mean}
 
-In general the unwrapped mean and the circular mean are different. In fact it is reasonably easy to construct distributions which \emph{have} a circular mean but \emph{do not} have an unwrapped mean and other distributions which \emph{have} an unwrapped mean but \emph{do not} have a circular mean. As a simple example consider the circular random variable that takes the value 0 with probability 0.6 and the value $-\nicefrac{1}{2}$ with probability 0.4.  The circular mean is clearly 0 but the unwrapped mean is not defined because (\ref{eq:minunrappedmeandef}) has two minima, one at 0.2 and the other at -0.2 both of value 0.06.  However, for some distributions both means are defined and they are also equal. It is potentially feasible to classify all such distributions, but this is not attempted here.  We do, however, find a particular class of useful circular distributions that do have equal circular and unwrapped means. These are described in the next theorem.
+In general the intrinsic mean and the circular mean are different. In fact it is reasonably easy to construct distributions which have a circular mean but do not have an intrinsic mean and other distributions which have an intrinsic mean but do not have a circular mean. As a simple example consider the circular random variable that takes the value 0 with probability 0.6 and the value $-\nicefrac{1}{2}$ with probability 0.4.  The circular mean is clearly 0 but the intrinsic mean is not defined because (\ref{eq:minunrappedmeandef}) has two minima, one at 0.2 and the other at -0.2 both of value 0.06.  However, for some distributions both means are defined and they are also equal. It is potentially feasible to classify all such distributions, but this is not attempted here.  We do, however, find a particular class of useful circular distributions that do have equal circular and intrinsic means. These are described in the next theorem.
 
 \begin{theorem}\label{thm:unimean}
-Let $\Theta$ be a circular random variable with piecewise continuous pdf $f(\theta)$ that attains its maximum at $0$ with $f(0) > 1$ and $f$ even and nondecreasing on $[-\nicefrac{1}{2}, 0]$. Then $\Theta$ has circular and unwrapped mean equal to zero.\end{theorem}
+Let $\Theta$ be a circular random variable with piecewise continuous pdf $f(\theta)$ that attains its maximum at $0$ with $f(0) > 1$ and $f$ even and nondecreasing on $[-\nicefrac{1}{2}, 0]$. Then $\Theta$ has circular and intrinsic mean equal to zero.\end{theorem}
 We omit the proof which is given in \cite[p.~74]{McKilliam2010thesis}. In a sense this result is `intuitively obvious' as the requirements force the distribution to be \emph{concentrated} in a symmetric manner.  Because $f$ is even and nondecreasing on $[-\nicefrac{1}{2}, 0]$ then it is also non increasing on $[0, \nicefrac{1}{2})$. %Combining this with the fact that $f(0) > 1$ immediately implies that the antipodal point $f(-\nicefrac{1}{2}) < 1$ otherwise the integral $\int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}f(\theta)d\theta$ would not equal one. 
-The requirements automatically include distributions that are unimodal and symmetric, but they also include distributions with \emph{flat} pieces, for example, many cases of the \term{wrapped uniform distribution} \cite{Mardia_directional_statistics,Fisher1993}~\cite[Sec. 5.5]{McKilliam2010thesis}. However, the theorem \emph{does not} include the circular uniform distribution (Figure~\ref{fig:circularuniformdist}) because the circular uniform distribution has $f(0)$ equal to one but not greater than one.
+The requirements automatically include distributions that are unimodal and symmetric, but they also include distributions with \emph{flat} pieces, for example, many cases of the \term{wrapped uniform distribution} \cite{Mardia_directional_statistics,Fisher1993}~\cite[Sec. 5.5]{McKilliam2010thesis}.  However, the theorem \emph{does not} include the circular uniform distribution on $[-\nicefrac{1}{2}, \nicefrac{1}{2})$ (Figure~\ref{fig:circularuniformdist}) because the circular uniform distribution has $f(0)$ equal to one but not greater than one.  %A similar theorem is given stated for Reimanian manifolds~\cite{Bhattacharya_int_ext_means_2003}.
 
 % \begin{proof}
-% Statement (2) follows directly from statement (1) because if $\Theta$ has circular mean $\mu_{\text{circ}}$ and unwrapped mean $\mu_{\text{unwrap}}$ then the rotated circular random variable $\fracpart{\Theta + \phi}$ has circular mean $\fracpart{\mu_{\text{circ}} + \phi}$ and unwrapped mean $\fracpart{\mu_{\text{unwrap}} + \phi}$. It remains to prove statement (1). 
+% Statement (2) follows directly from statement (1) because if $\Theta$ has circular mean $\mu_{\text{circ}}$ and intrinsic mean $\mu_{\text{unwrap}}$ then the rotated circular random variable $\fracpart{\Theta + \phi}$ has circular mean $\fracpart{\mu_{\text{circ}} + \phi}$ and intrinsic mean $\fracpart{\mu_{\text{unwrap}} + \phi}$. It remains to prove statement (1). 
 
 % We first prove that the circular mean $\mu_{\text{circ}} = \tfrac{\angle{c}}{2\pi}$ is zero. It suffices to show that the integral
 % \[
@@ -441,7 +469,7 @@ The requirements automatically include distributions that are unimodal and symme
 % \int_{-\nicefrac{1}{2}}^{0} \cos(2\pi\theta) f(\theta) d\theta = \int_{0}^{\nicefrac{1}{2}} \cos(2\pi\theta) f(\theta) d\theta
 % \]
 
-% We will now prove that the unwrapped mean is also zero. The approach we take is similar to Lemma 1 from~\cite{Quinn2007} and also Lemma 3 from~\cite{McKilliamFrequencyEstimationByPhaseUnwrapping2009}. We need to show that the integral
+% We will now prove that the intrinsic mean is also zero. The approach we take is similar to Lemma 1 from~\cite{Quinn2007} and also Lemma 3 from~\cite{McKilliamFrequencyEstimationByPhaseUnwrapping2009}. We need to show that the integral
 % \[
 % g(\mu) = \int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}\fracpart{\theta - \mu}^2f(\theta) d\theta
 % \]
@@ -470,7 +498,7 @@ The requirements automatically include distributions that are unimodal and symme
 % &= 2\mu - 2F( \mu-\nicefrac{1}{2}) \nonumber
 % \end{align}
 % where $F$ is the cumulative distribution function\index{cumulative distribution function (cdf)} (cdf) of $\Theta$. Since $f$ is even and non-decreasing on $[-\nicefrac{1}{2}, 0)$, $F(-\nicefrac{1}{2}) = 0$, $F(0) = \nicefrac{1}{2}$ and $F(\mu - \nicefrac{1}{2})$
-% is convex on $[0, \nicefrac{1}{2})$. Also, because $f(-\nicefrac{1}{2}) < 1$ then $F$ is \emph{strictly} convex on $[0, \nicefrac{1}{2})$. So $g$ is monotonically increasing on $[0, \nicefrac{1}{2})$ and, being even, is monotonically decreasing on $[-\nicefrac{1}{2}, 0)$.  Therefore $g$ is uniquely minimised at zero and the unwrapped mean is equal to zero.
+% is convex on $[0, \nicefrac{1}{2})$. Also, because $f(-\nicefrac{1}{2}) < 1$ then $F$ is \emph{strictly} convex on $[0, \nicefrac{1}{2})$. So $g$ is monotonically increasing on $[0, \nicefrac{1}{2})$ and, being even, is monotonically decreasing on $[-\nicefrac{1}{2}, 0)$.  Therefore $g$ is uniquely minimised at zero and the intrinsic mean is equal to zero.
 % \end{proof}
 
 % \subsection{Projected circular distributions}\label{sec:projecteddists}
@@ -494,7 +522,7 @@ The requirements automatically include distributions that are unimodal and symme
 % \[
 % \Theta = \frac{1}{2\pi}\angle{X}.
 % \]
-% Then $\Theta$ is symmetrically distributed about $0$, and unimodal with mode at $0$, and $\Theta$ is unimean with circular and unwrapped means equal to $0$. 
+% Then $\Theta$ is symmetrically distributed about $0$, and unimodal with mode at $0$, and $\Theta$ is unimean with circular and intrinsic means equal to $0$. 
 % \end{theorem}
 % Before we begin the proof note that the requirement for $z^{-1}f_{Z}(z)$ to be non increasing implies that the probability density function of $Z e^{2\pi j \Phi}$ decreases as we move away from the origin. That is, the pdf of $Z e^{2\pi j \Phi}$ in rectangular coordinates is given by $z^{-1}f_{Z}(z)$, where $z = \sqrt{x^2 + y^2}$ and $x$ and $y$ denotes the real and imaginary parts of $Z e^{2\pi j \Phi}$, and this pdf is non increasing with $z$.  For example, the zero mean complex Gaussian distribution with independent real and imaginary parts satisfies this requirement. 
 % \begin{proof}
@@ -514,20 +542,21 @@ The requirements automatically include distributions that are unimodal and symme
 
 \section{Comparing the two estimators}\label{sec:comparingestimatorcircmean}
 
-In this section we compare the angular least squares estimator and the sample circular mean.  %It is important to realise that, in general, these are estimators of different quantities.  Angular least squares estimates the unwrapped mean, while the sample circular mean estimates the circular mean. For circular distributions that have different circular and unwrapped means, this would make a comparison somewhat meaningless.  However, comparisons can be made for distributions with equal circular and unwrapped means, such as those described in Theorem~\ref{thm:unimean}. 
-The distributions that we will consider are the von Mises, wrapped normal and wrapped uniform distributions \cite[Ch.~3]{Fisher1993}\cite[Ch.~3]{Mardia_directional_statistics}\cite[Ch.~4]{McKilliam2010thesis} and also a distribution created from a weighted sum of the the von Mises and the circular uniform distributions.  All of these distributions satisfy the requirements of Theorem~\ref{thm:unimean} and therefore have equal circular and unwrapped means.  %As a general rule of thumb we find that the sample circular mean is slightly more accurate when the distribution is `von Mises-like' and the angular least squares estimator is more accurate when the distribution is `uniform-like'.
-Figures~\ref{fig:directionest_VonMises} to~\ref{fig:directionest_sumdist} display the sample mean square error (MSE) of the estimators when the number of observations is $N=4,64$ and $1024$. The quantity displayed on the horizontal axis is the unwrapped variance of the circular random variable being estimated. For each value of unwrapped variance $T = 5000$ trials were run to obtain $T$ separate estimates $\hat{\mu}_1, \dots, \hat{\mu}_{T}$. The sample MSE is computed by averaging the squared fractional parts according to $T^{-1}\sum_{t=1}^{T}\fracpart{ \hat{\mu}_t - \mu_0}^2$.
+In this section we compare the sample intrinsic mean and the sample circular mean.  %It is important to realise that, in general, these are estimators of different quantities.  Angular least squares estimates the intrinsic mean, while the sample circular mean estimates the circular mean. For circular distributions that have different circular and intrinsic means, this would make a comparison somewhat meaningless.  However, comparisons can be made for distributions with equal circular and intrinsic means, such as those described in Theorem~\ref{thm:unimean}. 
+The distributions that we will consider are the von Mises, wrapped normal and wrapped uniform distributions \cite[Ch.~3]{Fisher1993}\cite[Ch.~3]{Mardia_directional_statistics}\cite[Ch.~4]{McKilliam2010thesis} and also a distribution created from a weighted sum of the the von Mises and the circular uniform distributions.  All of these distributions satisfy the requirements of Theorem~\ref{thm:unimean} and therefore have equal circular and intrinsic means.  %As a general rule of thumb we find that the sample circular mean is slightly more accurate when the distribution is `von Mises-like' and the sample intrinsic mean is more accurate when the distribution is `uniform-like'.
+Figures~\ref{fig:directionest_VonMises} to~\ref{fig:directionest_sumdist} display the sample mean square error (MSE) of the estimators when the number of observations is $N=4,64$ and $1024$. The quantity displayed on the horizontal axis is the intrinsic variance of the circular random variable being estimated. For each value of intrinsic variance $T = 5000$ trials were run to obtain $T$ separate estimates $\hat{\mu}_1, \dots, \hat{\mu}_{T}$. The sample MSE is computed by averaging the squared fractional parts according to $T^{-1}\sum_{t=1}^{T}\fracpart{ \hat{\mu}_t - \mu_0}^2$.
 
-Figure~\ref{fig:directionest_VonMises} displays the MSE when the observations are sampled from the von Mises distribution. The sample circular mean performs slightly better in this case.  Figure~\ref{fig:directionest_Uniform} displays the MSE when the observations are sampled from the wrapped uniform distribution.  For this distribution the angular least squares estimator is more accurate.  Figure~\ref{fig:directionest_normal} shows the MSE when the observations are sampled from the wrapped normal distribution.  In this case, the estimators perform quite similarly.  The sample circular mean is slightly more accurate when the unwrapped variance is larger, i.e. above approximately 0.05, and the angular least square estimator is slightly more accurate when the unwrapped variance is smaller, i.e. less than approximately 0.05.  When the unwrapped variance is sufficiently small both estimators display similar performance.  All figures display the asymptotic variances predicted by Theorems~\ref{thm:asymp_arg_complex_mean} and~\ref{thm:asymp_proof_m=0}.  The predictions are accurate when $N$ is sufficiently large.
+Figure~\ref{fig:directionest_VonMises} displays the MSE when the observations are sampled from the von Mises distribution. The sample circular mean performs slightly better in this case.  Figure~\ref{fig:directionest_Uniform} displays the MSE when the observations are sampled from the wrapped uniform distribution.  For this distribution the sample intrinsic mean is more accurate.  Figure~\ref{fig:directionest_normal} shows the MSE when the observations are sampled from the wrapped normal distribution.  In this case, the estimators perform quite similarly.  The sample circular mean is slightly more accurate when the intrinsic variance is larger, i.e. above approximately 0.05, and the sample intrinsic mean is slightly more accurate when the intrinsic variance is smaller, i.e. less than approximately 0.05.  When the intrinsic variance is sufficiently small both estimators display similar performance.  All figures display the asymptotic variances predicted by Theorems~\ref{thm:asymp_arg_complex_mean} and~\ref{thm:asymp_proof_m=0}.  The predictions are accurate when $N$ is sufficiently large.
 
-We can use the results of Theorems~\ref{thm:asymp_arg_complex_mean} and~\ref{thm:asymp_proof_m=0} to hypothesise about the behaviour of the estimators and also produce guidelines for selecting which estimator is better for a particular scenario.  A dominant factor in determining the variance of the angular least squares estimator is the term $(1 - f(-\nicefrac{1}{2}))^2$ that appears on the denominator of~(\ref{eq:asympvarm=0}).  The variance of the sample circular mean \eqref{eq:asympvarscm} does not depend so specifically on the value of the pdf at the antipodal point $f(-\nicefrac{1}{2})$. If the value of the pdf at $f(-\nicefrac{1}{2})$ is small then the angular least squares estimator tends to perform well. We refer to such distributions as `light-tailed'. Probably the extreme case of a `light-tailed' distribution is the wrapped uniform. In this case $f(-\nicefrac{1}{2}) = 0$ and the angular least squares estimator performs better than the sample circular mean (Figure~\ref{fig:directionest_Uniform}). The use of the wrapped uniform distribution may initially seem contrived, however, it is often used in practice for modeling the effect of quantisation noise \cite{Widrow-Kollar_quant_noise_2008}.  For example, in the problem of delay estimation \cite{Elton_circstat_radar_pulse_1994} the received signal is taken from a timer and the timer is typically quantised.  If the quantisation is very course, or alternatively the signal period is very small, then quantisation might be a dominant source of noise.  The angular least squares estimator would likely be a better choice in this scenario. 
+We can use the results of Theorems~\ref{thm:asymp_arg_complex_mean} and~\ref{thm:asymp_proof_m=0} to hypothesise about the behaviour of the estimators and also produce guidelines for selecting which estimator is better for a particular scenario.  A dominant factor in determining the variance of the sample intrinsic mean is the term $(1 - f(-\nicefrac{1}{2}))^2$ that appears on the denominator of~(\ref{eq:asympvarm=0}).  The variance of the sample circular mean \eqref{eq:asympvarscm} does not depend so specifically on the value of the pdf at the antipodal point $f(-\nicefrac{1}{2})$. If the value of the pdf at $f(-\nicefrac{1}{2})$ is small then the sample intrinsic mean tends to perform well. We refer to such distributions as `light-tailed'. An example of a `light-tailed' distribution is the wrapped uniform. In this case $f(-\nicefrac{1}{2}) = 0$ and the sample intrinsic mean performs better than the sample circular mean (Figure~\ref{fig:directionest_Uniform}). The use of the wrapped uniform distribution may initially seem contrived, however, it is often used in practice for modeling the effect of quantisation noise \cite{Widrow-Kollar_quant_noise_2008}.  For example, in the problem of delay estimation \cite{Elton_circstat_radar_pulse_1994} the received signal is taken from a timer and the timer is typically quantised.  If the quantisation is very coarse, or alternatively the signal period is very small, then quantisation might be a dominant source of noise.  The sample intrinsic mean would likely be a better choice in this scenario. 
 
-Conversely if the pdf is `large' at $f(-\nicefrac{1}{2})$  (i.e. the distribution is `heavy-tailed') then we expect the variance of the angular least squares estimator to be (comparatively) large, and that the sample circular mean estimator would be better. This behaviour is probably somewhat seen with the von Mises distribution (Figure~\ref{fig:directionest_VonMises}), although not in a substantial manner. To test this hypothesis further we have run another set of simulations with the pdf
+Conversely if the pdf is `large' at $f(-\nicefrac{1}{2})$  (i.e. the distribution is `heavy-tailed') then we expect the variance of the sample intrinsic mean to be (comparatively) large, and that the sample circular mean would be better. %This behaviour is probably somewhat seen with the von Mises distribution (Figure~\ref{fig:directionest_VonMises}), although not in a substantial manner. 
+To test this hypothesis we have run simulations with the pdf
 \begin{equation}\label{eq:uni+vm_dist}
 f(\theta) = (1-p)v(\theta) + p
 \end{equation}
-where $0 < p < 1$ and where $v(\theta) = e^{\kappa\cos\left(2\pi \theta \right)}I_0^{-1}\left(p^{-1}\right)$ is the pdf of the zero mean von Mises distribution with \emph{concentration} $p^{-1}$ and $I_0(\cdot)$ is the zeroth order modified Bessel function \cite[Sec.~5.3]{McKilliam2010thesis}~\cite{Fisher1993,Mardia_directional_statistics}.  This distribution corresponds to a random variable that is von Mises with probability $1-p$ and otherwise is circular uniform (Figure~\ref{fig:circularuniformdist}) with probability $p$.  Figure~\ref{fig:pdf_sumunifvonmis} shows the pdf of this distribution when $p = 0.3$.  In practice a distribution of this type might occur when the observations contain outliers that can be modeled by the circular uniform distribution. %The distribution is unimodal and symmetric so the corresponding random variable has zero circular and unwrapped means by Theorem~\ref{thm:unimean}.  
-The unwrapped variance increases monotonically with $p$.  An effect of including the circular uniform distribution is to increase the value of the pdf at the antipodal point given by $f(-\nicefrac{1}{2}) = p + (1-p)I_0^{-1}\left(p^{-1}\right)$.  So this distribution is particularly `heavy-tailed'. The performance of the estimators with this distribution is shown in Figure~\ref{fig:directionest_sumdist}. The sample circular mean convincingly outperforms the angular least squares estimator as expected.
+where $0 < p < 1$ and where $v(\theta) = e^{\kappa\cos\left(2\pi \theta \right)}I_0^{-1}\left(p^{-1}\right)$ is the pdf of the zero mean von Mises distribution with \emph{concentration} $p^{-1}$ and $I_0(\cdot)$ is the zeroth order modified Bessel function \cite[Sec.~5.3]{McKilliam2010thesis}~\cite{Fisher1993,Mardia_directional_statistics}.  This distribution corresponds to a random variable that is von Mises with probability $1-p$ and otherwise is circular uniform (Figure~\ref{fig:circularuniformdist}) with probability $p$.  Figure~\ref{fig:pdf_sumunifvonmis} shows the pdf of this distribution when $p = 0.3$.  %In practice a distribution of this type might occur when the observations contain outliers that can be modeled by the circular uniform distribution. %The distribution is unimodal and symmetric so the corresponding random variable has zero circular and intrinsic means by Theorem~\ref{thm:unimean}.  
+The intrinsic variance increases monotonically with $p$.  An effect of including the circular uniform distribution is to increase the value of the pdf at the antipodal point given by $f(-\nicefrac{1}{2}) = p + (1-p)I_0^{-1}\left(p^{-1}\right)$.  So this distribution is particularly `heavy-tailed'. The performance of the estimators with this distribution is shown in Figure~\ref{fig:directionest_sumdist}. The sample circular mean convincingly outperforms the sample intrinsic mean as expected.
 
 \begin{figure}[tp]
 	\centering
@@ -539,7 +568,7 @@ The unwrapped variance increases monotonically with $p$.  An effect of including
 \begin{figure}[p]
 	\centering
 		\includegraphics[width=\linewidth]{plots/directionestplot-1.mps}
-		\caption{MSE versus unwrapped variance for the von Mises distribution.}
+		\caption{MSE versus intrinsic variance for the von Mises distribution.}
 		\label{fig:directionest_VonMises}
 \end{figure}
 %\newpage
@@ -547,21 +576,21 @@ The unwrapped variance increases monotonically with $p$.  An effect of including
 \begin{figure}[p]
 	\centering
 		\includegraphics[width=\linewidth]{plots/directionestplot-2.mps}
-		\caption{MSE versus unwrapped variance for the wrapped uniform distribution.}
+		\caption{MSE versus intrinsic variance for the wrapped uniform distribution.}
 		\label{fig:directionest_Uniform}
 \end{figure}
 
 \begin{figure}[p]
 	\centering
 		\includegraphics[width=\linewidth]{plots/delayestplot-1.mps}
-		\caption{MSE versus unwrapped variance for the wrapped normal distribution.}
+		\caption{MSE versus intrinsic variance for the wrapped normal distribution.}
 		\label{fig:directionest_normal}
 \end{figure}
 
 \begin{figure}[p]
 	\centering
 		\includegraphics[width=\linewidth]{plots/sumdistplot-1.mps}
-		\caption{MSE versus unwrapped variance for the distribution from~\eqref{eq:uni+vm_dist}.}
+		\caption{MSE versus intrinsic variance for the distribution from~\eqref{eq:uni+vm_dist}.}
 		\label{fig:directionest_sumdist}
 \end{figure}
 
@@ -570,13 +599,18 @@ The unwrapped variance increases monotonically with $p$.  An effect of including
 
 \section{Further remarks}
 
-One topic that we have ignored is the practical computation of confidence intervals for the estimators.  If the distribution is known in advance then confidence intervals can be computed directly from the expressions for asymptotic variance given by Theorems~\ref{thm:asymp_arg_complex_mean} and~\ref{thm:asymp_proof_m=0}.  However, if the distributions is not known in advance, it is necessary to estimate confidence intervals from the data.  For the sample circular mean this is probably straightforward, an estimate of the circular variance and the second trigonometric moment, both required in (\ref{eq:asympvarscm}), can be made by taking the appropriate averages as explained in~\cite{Fisher_common_mean_direction_dir_est_no_dist_assumptions1983}. For the angular least squares estimator the problem is not so straightforward. The asymptotic variance~(\ref{eq:asympvarm=0}) depends on the unwrapped variance $\sigma^2$ and also the value of the pdf at the antipodal point $f(-\nicefrac{1}{2})$. An estimate of the unwrapped variance can be obtained by the average $N^{-1}\sum_{n=1}^{N}\fracpart{\Theta_n - \hat{\mu}}^2$ but the appropriate estimator of $f(-\nicefrac{1}{2})$ is not as obvious. Some type of density estimation is required \cite{Fisher1989smoothingcircdata,Rosenblatt_dens_est_1956,Parzen_dens_est_1962}, but we will not consider this further here. Given estimated confidence intervals it is potentially possible to compute both the sample circular mean and the angular least squares estimators and select the best estimator `on-line' using the confidence intervals.  This has the potential to produce a hybrid estimator that works well for both `heavy-tailed' and `light-tailed' distributions.
+One topic that we have ignored is the practical computation of confidence intervals for the estimators.  If the distribution is known in advance then confidence intervals can be computed directly from the expressions for asymptotic variance given by Theorems~\ref{thm:asymp_arg_complex_mean} and~\ref{thm:asymp_proof_m=0}.  However, if the distribution is not known in advance, it is necessary to estimate confidence intervals from the data.  For the sample circular mean this is probably straightforward, an estimate of the circular variance and the second trigonometric moment, both required in (\ref{eq:asympvarscm}), can be made by taking the appropriate averages as explained in~\cite{Fisher_common_mean_direction_dir_est_no_dist_assumptions1983}. For the sample intrinsic mean the problem is not so straightforward. The asymptotic variance~(\ref{eq:asympvarm=0}) depends on the intrinsic variance $\sigma^2$ and also the value of the pdf at the antipodal point $f(-\nicefrac{1}{2})$. An estimate of the intrinsic variance can be obtained by the average $N^{-1}\sum_{n=1}^{N}\fracpart{\Theta_n - \hat{\mu}}^2$ but the appropriate estimator of $f(-\nicefrac{1}{2})$ is not as obvious. Some type of density estimation is required \cite{Fisher1989smoothingcircdata,Rosenblatt_dens_est_1956,Parzen_dens_est_1962}, but we will not consider this further here. 
+%Given estimated confidence intervals it is potentially possible to compute both the sample circular mean and the sample intrinsic means and select the best estimator `on-line' using the confidence intervals.  This has the potential to produce a hybrid estimator that works well for both `heavy-tailed' and `light-tailed' distributions.
 
-The angular least squares estimator has an obvious interpretation in more dimensions, that of minimising square arc-length on the sphere. However, the fast algorithm based on the lattice $A_n^*$ does not carry over into more dimensions. The modulo nature of the circle naturally imbues the combinatorial structure of a lattice. More precisely, the circle gives rise to a $\ints$-module, in this case an infinite discrete abelian group. However, in more dimensions, the unit-sphere does not correspond with a $\ints$-module, so there is no corresponding lattice. There may, however, exist other combinatorial structures for rapidly computing the analogue of the angular least squares estimator in more dimensions.
+The sample intrinsic mean has an obvious interpretation in more dimensions, that of minimising square arc-length on the sphere. However, the fast algorithm based on the lattice $A_n^*$ does not carry over into more dimensions. The modulo nature of the circle naturally imbues the combinatorial structure of a lattice. More precisely, the circle gives rise to a $\ints$-module, in this case an infinite discrete abelian group. However, in more dimensions, the unit-sphere does not correspond with a $\ints$-module, so there is no corresponding lattice. There may, however, exist other combinatorial structures for rapidly computing the analogue of the sample intrinsic mean in more dimensions.
 
 \section{Conclusion}
 
-This paper has considered two notions of \term{mean direction}, the \term{circular mean} that is the most common definition and the \term{unwrapped mean} that is uncommon. We have considered methods for estimating these means. The first is the \term{sample circular mean} estimator of the circular mean that has received significant attention in the literature. The second estimator is the \term{angular least squares estimator} of the unwrapped mean. We showed how the angular least squares estimator can be rapidly computed by finding a nearest point in the lattice $A_n^*$. Theorem~\ref{thm:asymp_proof_m=0} showed that the angular least squares estimator is strongly consistent and asymptotically normally distributed. Section~\ref{sec:comparingestimatorcircmean} considered the performance of these estimators for a variety of circular distributions.  It was found that the angular least squares estimator tends to perform better when the distribution is `light-tailed' (when the antipodal point $f(-\nicefrac{1}{2})$ is small), whereas the sample circular mean tends to perform better when the distribution is `heavy-tailed' (when the antipodal point $f(-\nicefrac{1}{2})$ is large). We also found that the performance of the estimators is accurately modeled by the asymptotic results derived in~Theorems~\ref{thm:asymp_arg_complex_mean} and~\ref{thm:asymp_proof_m=0}.
+This paper has considered two notions of \term{mean direction}, the \term{circular mean} and the \term{intrinsic mean}. We have considered methods for estimating these means, the \term{sample circular mean} and the \term{sample intrinsic mean}.  We showed how the sample intrinsic mean can be rapidly computed by finding a nearest point in the lattice $A_n^*$. Theorem~\ref{thm:asymp_proof_m=0} showed that the sample intrinsic mean is strongly consistent and asymptotically normally distributed. Section~\ref{sec:comparingestimatorcircmean} considered the performance of these estimators for a variety of circular distributions.  It was found that the sample intrinsic mean tends to perform better when the distribution is `light-tailed' (when the antipodal point $f(-\nicefrac{1}{2})$ is small), whereas the sample circular mean tends to perform better when the distribution is `heavy-tailed' (when the antipodal point $f(-\nicefrac{1}{2})$ is large). We also found that the performance of the estimators is accurately modeled by the asymptotic results derived in~Theorems~\ref{thm:asymp_arg_complex_mean} and~\ref{thm:asymp_proof_m=0}.
+
+
+\section{Acknowlegdements}
+We would like to acknowledge the annoymous reviewers.  Their suggestions greatly improved this document.
 
 \appendix
 
@@ -599,20 +633,20 @@ for some $d > 0$ so that each interval $B_k$ has length $N^{d}$ and $B \subseteq
 &= \sup_{k}\sup_{b \in B_k}\vert D_N(b) - D_N(b_k) + D_N(b_k)\vert \\
 &\leq \sup_{k}\vert D_N(b_k)\vert + \sup_{k}\sup_{b \in B_k}\vert D_N(b) - D_N(b_k)\vert.
 \end{align*}
-So, the proof is complete if we can show that $\sup_{k\in G}\vert D_N(b_k)\vert \rightarrow 0$ and $\sup_{k\in G}\sup_{b \in B_k}\vert D_N(b) - D_N(b_k)\vert \rightarrow 0$ almost surely as $N\rightarrow \infty$.  These are proved in Lemma~\ref{lem:DNij->0} and Lemma~\ref{lem:DNoverBij->0} which follow.
+So, the proof is complete if we can show that $\sup_{k}\vert D_N(b_k)\vert \rightarrow 0$ and $\sup_{k}\sup_{b \in B_k}\vert D_N(b) - D_N(b_k)\vert \rightarrow 0$ almost surely as $N\rightarrow \infty$.  These are proved in Lemma~\ref{lem:DNij->0} and Lemma~\ref{lem:DNoverBij->0} which follow.
 \end{proof}
 
 \begin{lemma} \label{lem:DNij->0}
-$\sup_{k\in G}\vert D_N(b_k)\vert \rightarrow 0$ almost surely as $N\rightarrow \infty$.
+$\sup_{k}\vert D_N(b_k)\vert \rightarrow 0$ almost surely as $N\rightarrow \infty$.
  \end{lemma}
 \begin{proof}
 Let $\beta$ be a positive integer.  For any fixed $b$ Markov's inequality gives
 \[
- \prob\left(\left\vert D_N^{2\beta}(b) \right\vert > \epsilon^{2\beta}\right) \leq \frac{E\left[  \left\vert D_{N}^{2\beta}(b) \right\vert \right]  }{\varepsilon^{2\beta}}
+ \prob\left(\left\vert D_N^{2\beta}(b) \right\vert > \varepsilon^{2\beta}\right) \leq \frac{E\left[  \left\vert D_{N}^{2\beta}(b) \right\vert \right]  }{\varepsilon^{2\beta}}
 \] 
 for any $\varepsilon > 0$. As $\beta$ is a positive integer, $\left|D_N^{2\beta}(b)\right| = D_{N}^{2\beta}(b)$ and
 \[
-\prob\left(\left\vert D_N(b) \right\vert > \epsilon\right) \leq \frac{E \left[ D_N^{2\beta}(b) \right] }{\varepsilon^{2\beta}}.
+\prob\left(\left\vert D_N(b) \right\vert > \varepsilon\right) \leq \frac{E \left[ D_N^{2\beta}(b) \right] }{\varepsilon^{2\beta}}.
 \]
 It is known (see, for example, Brillinger~\cite{Brillinger1962_moment_bounds_iid} or Lemma 9 from \cite{McKilliamFrequencyEstimationByPhaseUnwrapping2009}) that $E\left[ D_N^{2\beta}(b) \right] = O\left(N^{-\beta}\right)$.  Thus,
  \begin{align*}
@@ -680,7 +714,7 @@ Because $f(\fracpart{x})$ is continuous at $-\nicefrac{1}{2}$ then by the mean v
 \[
 E k_n(\lambda) = -\lambda \big( f(-\nicefrac{1}{2}) + o(1) \big)
 \] 
-as $\lambda \rightarrow 0$.  Now, results from the asymptotic theory of empirical distribution functions~\cite{Billingsley1999_convergence_of_probability_measures} show that, if $\lambda > 0$, then $N^{-1/2} \sum_{n=1}^{N} \big( k_n(\lambda) - Ek_n(\lambda) \big)$ converges in distribution to $W(\lambda)$, a Gaussian element in the space $D[0,1]$ of functions that are right continuous and have left-hand limits, with zero mean and covariance
+as $\lambda \rightarrow 0$.  Now, results from the asymptotic theory of empirical distribution functions~\cite[Theorem 14.3, p. 149]{Billingsley1999_convergence_of_probability_measures} show that, if $\lambda > 0$, then $N^{-1/2} \sum_{n=1}^{N} \big( k_n(\lambda) - Ek_n(\lambda) \big)$ converges in distribution to $W(\lambda)$, a Gaussian element in the space $D[0,1]$ of functions that are right continuous and have left-hand limits, with zero mean and covariance
 \begin{align*}
 \operatorname{cov}&( W(\lambda_1), W(\lambda_2) ) \\
 &= 1 - F( \max(\lambda_1, \lambda_2) ) - \big( 1 - F(\lambda_1)  \big) \big( 1 - F(\lambda_2)  \big).
@@ -693,7 +727,7 @@ Similarly, if $\lambda < 0$, then $N^{-1/2} \sum_{n=1}^{N} \big( k_n(\lambda) - 
 \end{align*}
 Consequently, since in either case $W(\lambda)$ converges in probability to zero as $\lambda$ converges to zero,
 \[
-\sup_{\abs{\lambda}} \frac{1}{\sqrt{N}}\abs{ \sum_{n=1}^{N} \big( k_n(\lambda) - Ek_n(\lambda) \big)  } \rightarrow 0
+\sup_{\abs{\lambda} < \delta} \frac{1}{\sqrt{N}}\abs{ \sum_{n=1}^{N} \big( k_n(\lambda) - Ek_n(\lambda) \big)  } \rightarrow 0
 \]
 in probability as $\delta \rightarrow 0$. Thus, since $\hat{\lambda} \rightarrow 0$ almost surely as $N\rightarrow\infty$,
 \[
@@ -766,7 +800,7 @@ The proof follows since $W(\hat{\lambda})$ converges in probability to zero as $
 
 
 \small
-\bibliography{bib}
+\bibliography{../bib/bib}
 
 \end{document}
 
