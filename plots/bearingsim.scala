@@ -44,7 +44,6 @@ def randangle = randanglegener.nextDouble() - 0.5
 for( noises <- randomvars.par ; N <- Ns ) {
 
   val siggen =  new ConstantAngleSignal(N) //noisy circular data
-  siggen.randomSeed //randomise the seed!
 
   //List of estimators we will test for this N and noise distribution
   val estlist = List( new AngularLeastSquaresEstimator(N), new SampleCircularMean )
