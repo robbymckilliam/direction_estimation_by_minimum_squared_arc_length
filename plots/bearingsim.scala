@@ -41,9 +41,10 @@ val randanglegener = new scala.util.Random
 def randangle = randanglegener.nextDouble() - 0.5
 
 //for all the random variables and all the N
-for( noises <- randomvars ; N <- Ns ) {
+for( noises <- randomvars.par ; N <- Ns ) {
 
   val siggen =  new ConstantAngleSignal(N) //noisy circular data
+  siggen.randomSeed //randomise the seed!
 
   //List of estimators we will test for this N and noise distribution
   val estlist = List( new AngularLeastSquaresEstimator(N), new SampleCircularMean )
