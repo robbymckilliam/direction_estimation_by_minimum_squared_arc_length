@@ -171,7 +171,7 @@ where $m_2 = E[\cos(4\pi\Phi_1)]$ is the real part of the \emph{second trigonome
 % \] 
 
 %So, this theorem can be regarded as anlogue of the strong law of large numbers and also the central limit theorem but applied to the circular mean.
-% \begin{proof}
+% \begin{IEEEproof}
 % From \eqref{eq:direction_est_vectormean} and \eqref{eq:direction_samp_circ_mean} we have
 % \[
 % \hat{\mu} = \frac{1}{2\pi}\angle\left( N^{-1}\sum_{n=1}^{N}e^{2\pi j \fracpart{\mu_0 + \Phi_n }} \right).
@@ -198,7 +198,7 @@ where $m_2 = E[\cos(4\pi\Phi_1)]$ is the real part of the \emph{second trigonome
 % &= \frac{\mathcal{I}_N/\sqrt{N}}{2\pi(1 - \nu)} + O_p(N^{-1/2}),
 % \end{align*}
 % follows by taking a first order approximation of the arctangent function. So $\sqrt{N}\fracpart{\hat{\mu} - \mu_0}$ converges in distribution to the normal with zero mean and variance $\frac{h}{4\pi^2(1 - \nu)^2}$ by Corollary~\ref{cor:circmeancor}.
-% \end{proof}
+% \end{IEEEproof}
 
 %Note that the theorem holds whenever the circular mean of the $\Theta_n$ exists. A proof in the case where $f$ is symmetric and unimodal is given by \citet{Quinn2009_dasp_phase_only_information_loss}. 
 %Computing the asymptotic variance given by the theorem requires calculating $\sigma_s^2$. In general this can be numerically evaluated, but for some circular distributions reasonably simple expressions can be found. It has been shown by \cite{Quinn2009_dasp_phase_only_information_loss} that when $\fracpart{\Theta_n - \mu_0}$ has the $\vonmises(0,\kappa)$ distribution
@@ -249,7 +249,7 @@ The next lemma describes an interesting property about circular random variables
 \begin{lemma}\label{lem:antipolalzerounwpmean}
 Let $\Theta$ be a circular random variable with zero intrinsic mean, intrinsic variance $\sigma^2$, and pdf $f$ such that $f(\fracpart{x})$ is continuous at $x = -\nicefrac{1}{2}$.  Then $f(-\nicefrac{1}{2}) \leq 1$.
 \end{lemma}
-\begin{proof}
+\begin{IEEEproof}
 Define the function
 \[
 g(x) = E\fracpart{\Theta - x}^2 = \int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}\fracpart{\theta - x}^2f(\theta) \, d\theta.
@@ -266,13 +266,13 @@ g(-x) &= \sigma^2 + x^2 + \int_{\nicefrac{1}{2} - x}^{\nicefrac{1}{2}}(1 - 2x - 
 &\leq \sigma^2 + x^2 - x^2 = \sigma^2,
 \end{align*}
 contradicting the fact that $g(0) = \sigma^2$ is the unique minimiser of $g$.
-\end{proof}
+\end{IEEEproof}
 
 
 % \begin{theorem}\label{thm:zerounwpmeanprobbound}
 % Let $\Theta$ be a circular random variable with zero intrinsic mean and intrinsic variance $\sigma^2$ and pdf $f$.  If the periodic function $f(\fracpart{x})$ is continuous at $x = \nicefrac{1}{2}$ then the value of the pdf at $-\nicefrac{1}{2}$ less than or equal to one.  That is, $f(-\nicefrac{1}{2}) \leq 1$.
 % \end{theorem}
-% \begin{proof}
+% \begin{IEEEproof}
 % The proof requires the function
 % \[
 % g(x) = \var\fracpart{\Theta - x} = \int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}\fracpart{\theta - x}^2f(\theta) \, d\theta.
@@ -296,7 +296,7 @@ contradicting the fact that $g(0) = \sigma^2$ is the unique minimiser of $g$.
 % &\leq \sigma^2 + x^2 - x^2 \leq \sigma^2.
 % \end{align*}
 % This violates that $g(0) = \sigma^2$ is the unique minimiser of $g$. So statement 1 is true.
-% \end{proof}
+% \end{IEEEproof}
 
 
 \subsection{The lattice $A_n^*$}
@@ -363,7 +363,7 @@ Part 1 of this theorem follows as a special case of the result of Ziezold~\cite{
 
 %We now prove Theorem~\ref{thm:asymp_proof_m=0}. A similar result under stronger conditions is given by Quinn~\cite{Quinn2007}, but the proof we present here is more general and takes a different approach. The proof follows the format of more general results for frequency estimation by \emph{phase unwrapping} \cite{McKilliamFrequencyEstimationByPhaseUnwrapping2009} and for polynomial phase estimation by phase unwrapping \cite[Ch.~8]{McKilliam2010thesis}. In this special case the proof can be (and has been) substantially simplified.
 
-\begin{proof}
+\begin{IEEEproof}
 Substituting $\Theta_n = \fracpart{\Phi_n + \mu_0}$ into $SS$ gives
 \begin{align*}
 SS(\mu) &= \sum_{n=1}^{N}{ \fracpart{\fracpart{\Phi_n + \mu_0} - \mu}^2 } \\
@@ -436,7 +436,7 @@ and therefore $\sqrt{N}\hat{\lambda} = \sqrt{N}\fracpart{\hat{\mu} - \mu_0}$ con
 \frac{\frac{1}{\sqrt{N}}\sum_{n=1}^{N} \Phi_n}{1 - f(-\nicefrac{1}{2})}.
 \]
 The $\Phi_1\dots,\Phi_N$ are i.i.d. with zero intrinsic mean and intrinsic variance $\sigma^2$ so $E[\Phi_n] = 0$ and $\var[\Phi_n] = \sigma^2$ and, by the standard central limit theorem, the distribution of $\sqrt{N}\fracpart{\hat{\mu} - \mu_0}$ converges to the zero mean normal with variance $\sigma^2(1 - f(-\nicefrac{1}{2}))^{-2}$ as required. 
-\end{proof}
+\end{IEEEproof}
 
 
 
@@ -449,7 +449,7 @@ Let $\Theta$ be a circular random variable with piecewise continuous pdf $f(\the
 We omit the proof which is given in \cite[p.~74]{McKilliam2010thesis}. In a sense this result is `intuitively obvious' as the requirements force the distribution to be \emph{concentrated} in a symmetric manner.  Because $f$ is even and nondecreasing on $[-\nicefrac{1}{2}, 0]$ then it is also non increasing on $[0, \nicefrac{1}{2})$. %Combining this with the fact that $f(0) > 1$ immediately implies that the antipodal point $f(-\nicefrac{1}{2}) < 1$ otherwise the integral $\int_{-\nicefrac{1}{2}}^{\nicefrac{1}{2}}f(\theta)d\theta$ would not equal one. 
 The requirements automatically include distributions that are unimodal and symmetric, but they also include distributions with \emph{flat} pieces, for example, many cases of the \term{wrapped uniform distribution} \cite{Mardia_directional_statistics,Fisher1993}~\cite[Sec. 5.5]{McKilliam2010thesis}.  However, the theorem \emph{does not} include the circular uniform distribution on $[-\nicefrac{1}{2}, \nicefrac{1}{2})$ (Figure~\ref{fig:circularuniformdist}) because the circular uniform distribution has $f(0)$ equal to one but not greater than one.  %A similar theorem is given stated for Reimanian manifolds~\cite{Bhattacharya_int_ext_means_2003}.
 
-% \begin{proof}
+% \begin{IEEEproof}
 % Statement (2) follows directly from statement (1) because if $\Theta$ has circular mean $\mu_{\text{circ}}$ and intrinsic mean $\mu_{\text{unwrap}}$ then the rotated circular random variable $\fracpart{\Theta + \phi}$ has circular mean $\fracpart{\mu_{\text{circ}} + \phi}$ and intrinsic mean $\fracpart{\mu_{\text{unwrap}} + \phi}$. It remains to prove statement (1). 
 
 % We first prove that the circular mean $\mu_{\text{circ}} = \tfrac{\angle{c}}{2\pi}$ is zero. It suffices to show that the integral
@@ -499,7 +499,7 @@ The requirements automatically include distributions that are unimodal and symme
 % \end{align}
 % where $F$ is the cumulative distribution function\index{cumulative distribution function (cdf)} (cdf) of $\Theta$. Since $f$ is even and non-decreasing on $[-\nicefrac{1}{2}, 0)$, $F(-\nicefrac{1}{2}) = 0$, $F(0) = \nicefrac{1}{2}$ and $F(\mu - \nicefrac{1}{2})$
 % is convex on $[0, \nicefrac{1}{2})$. Also, because $f(-\nicefrac{1}{2}) < 1$ then $F$ is \emph{strictly} convex on $[0, \nicefrac{1}{2})$. So $g$ is monotonically increasing on $[0, \nicefrac{1}{2})$ and, being even, is monotonically decreasing on $[-\nicefrac{1}{2}, 0)$.  Therefore $g$ is uniquely minimised at zero and the intrinsic mean is equal to zero.
-% \end{proof}
+% \end{IEEEproof}
 
 % \subsection{Projected circular distributions}\label{sec:projecteddists}
 % A common way to construct a circular random variable is to take a complex random variable and \emph{project} it onto the unit circle. These are called \term{projected circular distributions}\index{projected circular distribution}~\cite{Mardia_directional_statistics}. If $X$ is a complex random variable with pdf $f_{\complex}$ then the corresponding projected circular random variable $\Theta$ is given by the complex argument of $X$ divided by $2\pi$, that is 
@@ -525,7 +525,7 @@ The requirements automatically include distributions that are unimodal and symme
 % Then $\Theta$ is symmetrically distributed about $0$, and unimodal with mode at $0$, and $\Theta$ is unimean with circular and intrinsic means equal to $0$. 
 % \end{theorem}
 % Before we begin the proof note that the requirement for $z^{-1}f_{Z}(z)$ to be non increasing implies that the probability density function of $Z e^{2\pi j \Phi}$ decreases as we move away from the origin. That is, the pdf of $Z e^{2\pi j \Phi}$ in rectangular coordinates is given by $z^{-1}f_{Z}(z)$, where $z = \sqrt{x^2 + y^2}$ and $x$ and $y$ denotes the real and imaginary parts of $Z e^{2\pi j \Phi}$, and this pdf is non increasing with $z$.  For example, the zero mean complex Gaussian distribution with independent real and imaginary parts satisfies this requirement. 
-% \begin{proof}
+% \begin{IEEEproof}
 % The fact that $\Theta$ is unimean follows directly from Theorem~\ref{thm:unimean} after we show that $\Theta$ is symmetric and unimodal. The probability density function of $\Theta$ can be shown to be
 % \[
 % f(\theta) = \int_0^\infty{ \frac{r f_{Z}\left(\sqrt{r^2 - 2r\cos{2\pi\theta} + 1}\right)}{\sqrt{r^2 - 2r\cos{2\pi \theta} + 1}} dr}.
@@ -538,7 +538,7 @@ The requirements automatically include distributions that are unimodal and symme
 % \]
 % Now because $z^{-1}f_{Z}(z)$ is non increasing in $z$ and because $z$ and $r$ are positive the term inside the integral above is always positive.  Therefore the integral is positive and $f$ is increasing with $a$. The magnitude $|\theta|$ increases as $a$ decreases so $z$ is decreasing with $|\theta|$. It remains to show that no jump discontinuities occur in $z$ when $a = \pm 1$ or $a = 0$, i.e. when $\theta = \pm \nicefrac{1}{2}$ for $\theta = 0$, but this is trivially the case due to the continuity of $f$. Therefore, as $f(\theta)$ 
 %is decreasing with $|\theta|$ and $f(\theta)$ is continuous, we see that $f(\theta)$ is unimodal with mode at $\theta = 0$.
-%\end{proof}
+%\end{IEEEproof}
 
 \section{Comparing the two estimators}\label{sec:comparingestimatorcircmean}
 
@@ -622,7 +622,7 @@ Let $L_N(\lambda)$ be given as in \eqref{eq:supELNLN}. Then
 converges almost surely to zero as $N \rightarrow \infty$.
 \end{lemma}
 This type of result is common to a body of literature that, in recent times, has been called the \term{uniform law of large numbers}. An overview of some of these techniques is given by Amemiya \cite[Ch.~4]{amemiya1985advanced}.
-\begin{proof}
+\begin{IEEEproof}
 Let $D_N = L_N - EL_N$ and $B = [-\nicefrac{1}{2},\nicefrac{1}{2})$ denote the unit interval. We want to show that $\sup_{b \in B} \vert D_N(b) \vert \rightarrow 0$ almost surely as $N\rightarrow \infty$. Partition $B$ into intervals
 \[
 B_k = \left[\frac{1}{2} + \frac{k-1}{N^{d}}, \frac{1}{2} + \frac{k}{N^{d} }\right) \,, \,\,\, k = 1,2,\dots,\floor{N^d} + 1
@@ -634,12 +634,12 @@ for some $d > 0$ so that each interval $B_k$ has length $N^{d}$ and $B \subseteq
 &\leq \sup_{k}\vert D_N(b_k)\vert + \sup_{k}\sup_{b \in B_k}\vert D_N(b) - D_N(b_k)\vert.
 \end{align*}
 So, the proof is complete if we can show that $\sup_{k}\vert D_N(b_k)\vert \rightarrow 0$ and $\sup_{k}\sup_{b \in B_k}\vert D_N(b) - D_N(b_k)\vert \rightarrow 0$ almost surely as $N\rightarrow \infty$.  These are proved in Lemma~\ref{lem:DNij->0} and Lemma~\ref{lem:DNoverBij->0} which follow.
-\end{proof}
+\end{IEEEproof}
 
 \begin{lemma} \label{lem:DNij->0}
 $\sup_{k}\vert D_N(b_k)\vert \rightarrow 0$ almost surely as $N\rightarrow \infty$.
  \end{lemma}
-\begin{proof}
+\begin{IEEEproof}
 Let $\beta$ be a positive integer.  For any fixed $b$ Markov's inequality gives
 \[
  \prob\left(\left\vert D_N^{2\beta}(b) \right\vert > \varepsilon^{2\beta}\right) \leq \frac{E\left[  \left\vert D_{N}^{2\beta}(b) \right\vert \right]  }{\varepsilon^{2\beta}}
@@ -659,12 +659,12 @@ We can choose $\beta > d > 0$ so that the exponent $d - \beta$ is less than zero
  \sum_{N=1}^{\infty}\prob\left(  \sup_{k }\abs{D_N(b_k)} >\varepsilon\right) < \infty,
 \]
 and consequently $\sup_{k }\abs{ D_N(b_k)} \rightarrow 0$ almost surely as $N\rightarrow\infty$ by the Borel-Cantelli lemma.%~\citep[p.~46]{Billingsley1979_probability_and_measure}.
-\end{proof}
+\end{IEEEproof}
 
 \begin{lemma}\label{lem:DNoverBij->0}
 $\sup_{k }\sup_{b \in B_k}\abs{D_N(b) - D_N(b_k)} \rightarrow 0$ almost surely as $N\rightarrow \infty$.
  \end{lemma}
-\begin{proof}
+\begin{IEEEproof}
 The proof we give is not just \emph{almost surely} but \emph{surely} as the convergence will be shown to occur irrespective of the values of the $\Phi_1, \dots, \Phi_N$.  Let 
 \[ 
 A_n(b) = \fracpart{\Phi_n - b}^2 - \fracpart{\Phi_n - b_k}^2.
@@ -680,7 +680,7 @@ This bound is independent of the value of $\Phi_n$ so the same result is true of
 &\leq \frac{1}{N}\sum_{n=1}^{N} 2N^{-d} \leq 2N^{-d}
 \end{align*}
 As the bound is independent of $k$, we have $\sup_{k}\sup_{ b  \in B_k }\left\vert D_N(b) - D_N(b_k)\right\vert \leq 2N^{-d}$ and the proof follows.
-\end{proof}
+\end{IEEEproof}
 
 \begin{lemma}\label{lem:boundedsquarefracparts}
 Let $x$ and $\delta$ be real numbers.  Then
@@ -688,9 +688,9 @@ Let $x$ and $\delta$ be real numbers.  Then
 \fracpart{x}^2 - |\delta| \leq \fracpart{x + \delta}^2 \leq \fracpart{x}^2 + |\delta|.
 \]
 \end{lemma}
-\begin{proof} (Sketch)
+\begin{IEEEproof} (Sketch)
 We omit a rigorous proof of this lemma which can be found in~\cite[Lemma~8.4]{McKilliam2010thesis}. The lemma is `obvious' because the squared fractional part function $\fracpart{x}^2$ is continuous and piecewise differentiable and the derivative has magnitude less than one whenever it exists.
-\end{proof}
+\end{IEEEproof}
 
 \begin{lemma}\label{lem:EI_n}
 \[
@@ -698,7 +698,7 @@ We omit a rigorous proof of this lemma which can be found in~\cite[Lemma~8.4]{Mc
 \]
 where $o_P(1)$ converges in probability to zero as $N\rightarrow\infty$.
 \end{lemma}
-\begin{proof}
+\begin{IEEEproof}
 Let $k_n(\lambda) = \round{\Phi_n - \lambda}$ and let $F(x)$ be the cumulative distribution function of $\Phi_n$.  Because $f(\fracpart{x})$ is continuous at $-\nicefrac{1}{2}$ then $F(x)$ is continuous and differentiable on $[-\nicefrac{1}{2}, -\nicefrac{1}{2} + \delta] \cup [\nicefrac{1}{2} - \delta, \nicefrac{1}{2}]$ for some $\delta > 0$.  Now
 \begin{align*}
 E k_n(\lambda) &= \begin{cases}
@@ -734,7 +734,7 @@ in probability as $\delta \rightarrow 0$. Thus, since $\hat{\lambda} \rightarrow
 \frac{1}{\sqrt{N}}\sum_{n=1}^{N} k_n(\hat{\lambda}) = W(\hat{\lambda}) + o_P(1) - \sqrt{N}\hat{\lambda}\big( f(-\nicefrac{1}{2}) + o_P(1) \big).
 \]
 The proof follows since $W(\hat{\lambda})$ converges in probability to zero as $N\rightarrow\infty$.
-\end{proof}
+\end{IEEEproof}
 
 
 % %%%This is my version of the proof which uses the Glivenko-Cantelli lemma and I think works fine too.
@@ -744,7 +744,7 @@ The proof follows since $W(\hat{\lambda})$ converges in probability to zero as $
 % \]
 % where $o(1)$ converges almost surely to zero as $N\rightarrow\infty$.
 % \end{lemma}
-% \begin{proof}
+% \begin{IEEEproof}
 % Let $F(x)$ be the cumulative distribution function of $\Phi_1$. Because $f(\fracpart{x})$ is continuous at $-\nicefrac{1}{2}$ then $F(x)$ is continuous and differentiable on $[-\nicefrac{1}{2}, -\nicefrac{1}{2} + \delta] \cup [\nicefrac{1}{2} - \delta, \nicefrac{1}{2}]$ for some $\delta > 0$. Let 
 % \[
 % G_N(\lambda) = \frac{1}{N}\sum_{n=1}^{N} \round{ \Phi_n - \lambda}
@@ -796,7 +796,7 @@ The proof follows since $W(\hat{\lambda})$ converges in probability to zero as $
 % \hat{\lambda}( f(-\nicefrac{1}{2}) - f_\delta) \geq -G_N(\hat{\lambda}) \geq \hat{\lambda}( f(-\nicefrac{1}{2}) + f_\delta ).
 % \]
 % as $N\rightarrow\infty$. The proof follows by multiplying this inequality by $\sqrt{N}$ and noting that $f_\delta$ can be chosen arbitrarily small.
-% \end{proof}
+% \end{IEEEproof}
 
 
 \small

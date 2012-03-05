@@ -6,7 +6,7 @@ import pubsim.bearing.BearingEstimator
 import pubsim.bearing.SampleCircularMean
 import pubsim.bearing.ConstantAngleSignal
 import pubsim.distributions.GaussianNoise
-import pubsim.distributions.RandomVariable
+import pubsim.distributions.ContinuousRandomVariable
 import pubsim.distributions.circular.CircularMeanVariance
 import pubsim.distributions.circular.CircularRandomVariable
 import pubsim.distributions.circular.ProjectedNormalDistribution
