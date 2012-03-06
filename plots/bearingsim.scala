@@ -54,7 +54,7 @@ for( noises <- randomvars.par ; N <- Ns ) {
     val Tfile = new java.io.FileWriter(Tfname)
     val cltfile = new java.io.FileWriter("clt_" + Tfname)
 
-    println("var \t mse \t clt")
+    //println("var \t mse \t clt")
     val starttime = (new java.util.Date).getTime
     
     for(noise <- noises ){
@@ -75,7 +75,7 @@ for( noises <- randomvars.par ; N <- Ns ) {
       //compute the varaince given by the central limit theorem
       val cltmse = est.asymptoticVariance(noise, N);
 	
-      println(wrpvar.toString.replace('E', 'e')  + "\t" + mse.toString.replace('E', 'e') + "\t" + cltmse.toString.replace('E', 'e'))
+      //println(wrpvar.toString.replace('E', 'e')  + "\t" + mse.toString.replace('E', 'e') + "\t" + cltmse.toString.replace('E', 'e'))
       Tfile.write(wrpvar.toString.replace('E', 'e') + "\t" + mse.toString.replace('E', 'e') + "\n")
       cltfile.write(wrpvar.toString.replace('E', 'e') + "\t" + cltmse.toString.replace('E', 'e') + "\n")
 		
