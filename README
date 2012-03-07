@@ -1,25 +1,3 @@
-<<<<<<< HEAD
-Latex and simulation scripts for the paper:
-
-R. G. McKilliam, B. G. Quinn, and I. V. L. Clarkson. Direction estimation by minimum squared arc length. submitted to IEEE Trans. Signal Process., Mar. 2011.
-
-Data from the simulations already exists in this repository (the same data as used in the paper).  If you are using bash then
-
-sh buildfigsandpdf.sh
-
-will build the pdf using this data.  The pdf is called papersm.pdf.  If you want to run all the simulations again use
-
-sh runsimulationsandbuildpdf.sh
-
-You need a working java jvm and also Scala 2.8 or higher installed.  Depending on your machine this might take a while.  Open up the bash script and work backwards to get at the code.  The code uses the pubsim library which is available at 
-
-https://github.com/robbymckilliam/pubsim.  
-
-An executable for this library is packaged inside this repository. 
-
-
-
-=======
 Latex and simulation scripts for the paper:
 
 R. G. McKilliam, B. G. Quinn, and I. V. L. Clarkson. Direction estimation by minimum squared arc length. submitted to IEEE Trans. Signal Process., Mar. 2011.
@@ -37,7 +15,3 @@ You need a working java jvm and also Scala 2.9.1 or higher installed.  Depending
 https://github.com/robbymckilliam/pubsim.  
 
 An executable for this library is packaged inside this repository. 
-
-
-
->>>>>>> 589ded2d38ede07a506a154317b09c4d1b29aa84
