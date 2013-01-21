@@ -1,6 +1,6 @@
 Latex and simulation scripts for the paper:
 
-R. G. McKilliam, B. G. Quinn, and I. V. L. Clarkson. Direction estimation by minimum squared arc length. submitted to IEEE Trans. Signal Process., Mar. 2011.
+R. G. McKilliam, B. G. Quinn, and I. V. L. Clarkson. Direction estimation by minimum squared arc length. IEEE Trans. Sig. Process., 60(5):2115-2124, May 2012.
 
 Data from the simulations already exists in this repository (the same data as used in the paper).  If you are using bash then
 
