@@ -1,14 +1,9 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+package bearing;
 
-package pubsim.bearing;
-
-import pubsim.bearing.AngularLeastSquaresEstimator;
-import pubsim.bearing.BearingEstimator;
-import pubsim.bearing.SampleCircularMean;
-import pubsim.bearing.ConstantAngleSignal;
+import bearing.AngularLeastSquaresEstimator;
+import bearing.BearingEstimator;
+import bearing.SampleCircularMean;
+import bearing.ConstantAngleSignal;
 import pubsim.distributions.circular.CircularMeanVariance;
 import pubsim.distributions.circular.CircularRandomVariable;
 import pubsim.distributions.circular.WrappedGaussian;

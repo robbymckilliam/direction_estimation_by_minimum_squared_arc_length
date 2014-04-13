@@ -1,7 +1,4 @@
-/*
- */
-
-package pubsim.bearing.phase;
+package bearing.phase;
 
 import pubsim.Complex;
 
@@ -13,10 +10,12 @@ public class SampleCircularMean implements PhaseEstimator{
 
     private int n;
 
+    @Override
     public void setSize(int n) {
         this.n = n;
     }
 
+    @Override
     public double estimatePhase(Complex[] y) {
         n = y.length;
         

@@ -1,7 +1,4 @@
-/*
- */
-
-package pubsim.bearing.phase;
+package bearing.phase;
 
 import pubsim.Complex;
 

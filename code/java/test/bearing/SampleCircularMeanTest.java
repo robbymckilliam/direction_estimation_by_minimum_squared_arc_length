@@ -1,12 +1,7 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+package bearing;
 
-package pubsim.bearing;
-
-import pubsim.bearing.BearingEstimator;
-import pubsim.bearing.SampleCircularMean;
+import bearing.BearingEstimator;
+import bearing.SampleCircularMean;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

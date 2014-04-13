@@ -1,4 +1,4 @@
-package pubsim.bearing;
+package bearing;
 
 import java.io.BufferedWriter;
 import java.io.File;

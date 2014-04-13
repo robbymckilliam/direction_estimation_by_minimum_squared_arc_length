@@ -1,11 +1,5 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+package bearing.phase;
 
-package pubsim.bearing.phase;
-
-import pubsim.distributions.RealRandomVariable;
 import pubsim.SignalGenerator;
 import pubsim.Complex;
 import pubsim.distributions.NoiseGenerator;

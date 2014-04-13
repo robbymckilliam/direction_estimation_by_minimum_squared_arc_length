@@ -1,8 +1,4 @@
-/*
- * @author Robby McKilliam
- */
-
-package pubsim.bearing;
+package bearing;
 
 import pubsim.distributions.circular.CircularProcess;
 import pubsim.distributions.circular.CircularRandomVariable;

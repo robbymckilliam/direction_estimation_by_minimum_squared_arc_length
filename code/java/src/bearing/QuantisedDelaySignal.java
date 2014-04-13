@@ -1,13 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+package bearing;
 
-package pubsim.bearing;
-
-import pubsim.distributions.circular.WrappedUniform;
 import pubsim.distributions.processes.NoiseVector;
-import pubsim.SignalGenerator;
 import static pubsim.Util.fracpart;
 
 /**

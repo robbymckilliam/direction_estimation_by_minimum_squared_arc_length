@@ -1,14 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+package bearing.phase;
 
-package pubsim.bearing.phase;
-
-import pubsim.bearing.phase.LeastSquaresUnwrapping;
-import pubsim.bearing.phase.PhaseEstimator;
-import pubsim.bearing.phase.ConstantPhaseSignal;
-import pubsim.bearing.AngularLeastSquaresEstimator;
+import bearing.AngularLeastSquaresEstimator;
 import pubsim.distributions.GaussianNoise;
 import pubsim.distributions.RealRandomVariable;
 import pubsim.distributions.circular.CircularRandomVariable;
