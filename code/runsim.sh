@@ -7,5 +7,5 @@ do
 CP=$CP:${f}
 done
 
-scala -nocompdaemon -cp $CP bearing.scala
+#scala -nocompdaemon -cp $CP bearingsim.scala
 scala -nocompdaemon -cp $CP clt.scala

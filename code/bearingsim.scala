@@ -6,7 +6,7 @@ import bearing.BearingEstimator
 import bearing.SampleCircularMean
 import bearing.ConstantAngleSignal
 import pubsim.distributions.GaussianNoise
-import pubsim.distributions.ContinuousRandomVariable
+import pubsim.distributions.RealRandomVariable
 import pubsim.distributions.circular.CircularMeanVariance
 import pubsim.distributions.circular.CircularRandomVariable
 import pubsim.distributions.circular.ProjectedNormalDistribution
@@ -15,7 +15,7 @@ import pubsim.distributions.circular.WrappedGaussian
 import pubsim.distributions.circular.WrappedUniform
 import pubsim.distributions.circular.SumOfCircularDistributions
 import pubsim.distributions.circular.CircularUniform
-import pubsim.distributions.circular.UnwrappedMeanAndVariance
+import pubsim.distributions.circular.InstrinsicMeanAndVariance
 import pubsim.Util._
 
 val Ns = List(4,64,1024) //number of observations
@@ -51,10 +51,8 @@ for( noises <- randomvars.par ; N <- Ns ) {
   for( est <- estlist ){
   
     val Tfname = (est.getClass().getSimpleName() + "_" + noises(0).getClass().getSimpleName() + "_" + N).replace('$','_')
-    val Tfile = new java.io.FileWriter(Tfname)
-    val cltfile = new java.io.FileWriter("clt_" + Tfname)
+    val Tfile = new java.io.FileWriter("data/" + Tfname)
 
-    //println("var \t mse \t clt")
     val starttime = (new java.util.Date).getTime
     
     for(noise <- noises ){
@@ -71,18 +69,12 @@ for( noises <- randomvars.par ; N <- Ns ) {
       val mse = msetotal/iters
       
       //compute the wrapped variance of this circular random variable
-      val wrpvar = noise.unwrappedVariance(0.0)
-      //compute the varaince given by the central limit theorem
-      val cltmse = est.asymptoticVariance(noise, N);
-	
-      //println(wrpvar.toString.replace('E', 'e')  + "\t" + mse.toString.replace('E', 'e') + "\t" + cltmse.toString.replace('E', 'e'))
-      Tfile.write(wrpvar.toString.replace('E', 'e') + "\t" + mse.toString.replace('E', 'e') + "\n")
-      cltfile.write(wrpvar.toString.replace('E', 'e') + "\t" + cltmse.toString.replace('E', 'e') + "\n")
-		
+      val wrpvar = noise.intrinsicVariance(0.0)
+      Tfile.write(wrpvar.toString.replace('E', 'e') + "\t" + mse.toString.replace('E', 'e') + "\n")		
     }
     val runtime = (new java.util.Date).getTime - starttime
-    println(Tfname + " finished in " + (runtime/1000.0) + " seconds.\n") 
-    Tfile.close; cltfile.close
+    println(Tfname + " finished in " + (runtime/1000.0) + " seconds.") 
+    Tfile.close;
   }
 
 }
