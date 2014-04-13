@@ -5,15 +5,13 @@ mpost -interaction=nonstopmode wrappeduniform_var0p08.mp
 mpost -interaction=nonstopmode VonMisesSumUnif_0p3.mp 
 cd .. 
 
-cd plots 
+cd code/data 
 mpost -interaction=nonstopmode directionestplot.mp 
 mpost -interaction=nonstopmode delayestplot.mp 
 mpost -interaction=nonstopmode sumdistplot.mp 
-cd .. 
+cd ../..
 
-latex papersm.tex 
+pdflatex papersm.tex 
 bibtex papersm 
-latex papersm.tex 
-latex papersm.tex 
-dvips papersm.dvi 
-ps2pdf papersm.ps 
+pdflatex papersm.tex 
+pdflatex papersm.tex 
