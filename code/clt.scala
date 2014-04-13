@@ -66,7 +66,7 @@ for( noises <- randomvars ; N <- Ns ) {
 		
     }
     val runtime = (new java.util.Date).getTime - starttime
-    println("CLT " Tfname + " finished in " + (runtime/1000.0) + " seconds.") 
+    println("CLT " + Tfname + " finished in " + (runtime/1000.0) + " seconds.") 
     cltfile.close
   }
 
