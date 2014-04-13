@@ -1,10 +1,10 @@
 /**
 * Script for mean direction estimation simulations.
 */
-import pubsim.bearing.AngularLeastSquaresEstimator
-import pubsim.bearing.BearingEstimator
-import pubsim.bearing.SampleCircularMean
-import pubsim.bearing.ConstantAngleSignal
+import bearing.AngularLeastSquaresEstimator
+import bearing.BearingEstimator
+import bearing.SampleCircularMean
+import bearing.ConstantAngleSignal
 import pubsim.distributions.GaussianNoise
 import pubsim.distributions.RandomVariable
 import pubsim.distributions.circular.CircularMeanVariance
@@ -30,10 +30,10 @@ def heavytaildist(p : Double) = {
 
 //construct an list of lists noise distributions with a logarithmic scale
 val randomvars = List( 
-  Range.Double(-41.0, -1, 0.5).map( db => scala.math.pow(10, db/30.0) ).map( p => heavytaildist(p) ),
-  Range.Double(-30.0, -8, 0.2).map( db => scala.math.pow(10, db/10.0) ).map( v => new WrappedGaussian(0,v) ),
-  Range.Double(-30.0, -11, 0.2).map( db => scala.math.pow(10.0, db/10.0) ).map( v => new WrappedUniform(0,v) ),
-  Range.Double(15.0, -9.0, -0.2).map( db => scala.math.pow(10, db/10.0) ).map( v => new VonMises(0,v) )
+  Range.Double(-41.0, -1, 0.05).map( db => scala.math.pow(10, db/30.0) ).map( p => heavytaildist(p) ),
+  Range.Double(-30.0, -8, 0.02).map( db => scala.math.pow(10, db/10.0) ).map( v => new WrappedGaussian(0,v) ),
+  Range.Double(-30.0, -11, 0.02).map( db => scala.math.pow(10.0, db/10.0) ).map( v => new WrappedUniform(0,v) ),
+  Range.Double(15.0, -9.0, -0.02).map( db => scala.math.pow(10, db/10.0) ).map( v => new VonMises(0,v) )
 )
 
 //function returns a random angle

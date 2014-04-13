@@ -1,10 +1,10 @@
 /**
 * Script for mean direction estimation simulations.
 */
-import pubsim.bearing.AngularLeastSquaresEstimator
-import pubsim.bearing.BearingEstimator
-import pubsim.bearing.SampleCircularMean
-import pubsim.bearing.ConstantAngleSignal
+import bearing.AngularLeastSquaresEstimator
+import bearing.BearingEstimator
+import bearing.SampleCircularMean
+import bearing.ConstantAngleSignal
 import pubsim.distributions.GaussianNoise
 import pubsim.distributions.ContinuousRandomVariable
 import pubsim.distributions.circular.CircularMeanVariance
